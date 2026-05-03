@@ -3583,6 +3583,74 @@ function resetTeams() {
   resetWheel();
 }
 
+// ── CONTROL REMOTO — PUNTERO DE PRESENTACIÓN ─────────────────────
+// PageUp   = rect. superior  → scroll arriba (continuo)
+// PageDown = rect. inferior  → scroll abajo (continuo)
+// b        = triángulo       → pestaña siguiente
+// Escape   = botón inferior  → pestaña anterior
+const TOTAL_TABS = 4;
+let _scrollIv = null;
+
+function _startScroll(dir) {
+  if (_scrollIv) return;
+  _scrollIv = setInterval(function(){ window.scrollBy(0, dir * 8); }, 8);
+}
+function _stopScroll() {
+  if (_scrollIv) { clearInterval(_scrollIv); _scrollIv = null; }
+}
+
+function showRemoteHUD(msg) {
+  var hud = document.getElementById('remote-hud');
+  if (!hud) {
+    hud = document.createElement('div');
+    hud.id = 'remote-hud';
+    hud.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);border:2px solid #C8A000;border-radius:14px;padding:10px 26px;font-family:Arial,sans-serif;font-size:1rem;font-weight:700;color:#F0C030;z-index:99999;pointer-events:none;transition:opacity .5s;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.7);';
+    document.body.appendChild(hud);
+  }
+  hud.textContent = msg;
+  hud.style.opacity = '1';
+  clearTimeout(hud._t);
+  hud._t = setTimeout(function(){ hud.style.opacity = '0'; }, 1600);
+}
+
+window.addEventListener('keydown', function(e) {
+  var tag = document.activeElement ? document.activeElement.tagName : '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  var overlays = ['muro-overlay','ticket-overlay'];
+  for (var i=0;i<overlays.length;i++){
+    var el = document.getElementById(overlays[i]);
+    if (el && el.style.display !== 'none' && el.style.display !== '') return;
+  }
+  var tabNames = ['','Conexión y activación','Construcción del aprendizaje','Consolidación y metacognición','Evaluación'];
+
+  if (e.key === 'PageUp') {
+    e.preventDefault(); e.stopPropagation();
+    _startScroll(-1); return;
+  }
+  if (e.key === 'PageDown') {
+    e.preventDefault(); e.stopPropagation();
+    _startScroll(1); return;
+  }
+  if (e.key === 'b' || e.key === 'B') {
+    e.preventDefault(); e.stopPropagation();
+    var next = Math.min(currentTab + 1, TOTAL_TABS);
+    if (next !== currentTab) { switchTab(next); showRemoteHUD('▶  ' + tabNames[next]); }
+    else showRemoteHUD('▶  Última pestaña');
+    return;
+  }
+  if (e.key === 'Escape') {
+    e.preventDefault(); e.stopPropagation();
+    var prev = Math.max(currentTab - 1, 1);
+    if (prev !== currentTab) { switchTab(prev); showRemoteHUD('◀  ' + tabNames[prev]); }
+    else showRemoteHUD('◀  Primera pestaña');
+    return;
+  }
+  if (e.key === 'F5') { e.preventDefault(); e.stopPropagation(); return; }
+}, true);
+
+window.addEventListener('keyup', function(e) {
+  if (e.key === 'PageUp' || e.key === 'PageDown') _stopScroll();
+}, true);
 // ── NOTIFICATION ─────────────────────────────────────────────
 let notifTimeout;
 function showNotif(msg){
