@@ -445,6 +445,90 @@ body::before {
   60%  { transform:scale(1.15); opacity:1; }
   100% { transform:scale(1);   opacity:1; }
 }
+@keyframes cardPop {
+  0%   { transform:scale(.85); opacity:0; }
+  70%  { transform:scale(1.04); opacity:1; }
+  100% { transform:scale(1);   opacity:1; }
+}
+
+/* ─── FLIP CARDS ─────────────────────────────────────────────── */
+.flip-card { perspective: 1000px; cursor: pointer; height: 420px; }
+.flip-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform .75s cubic-bezier(.4,0,.2,1);
+  transform-style: preserve-3d; border-radius: 18px;
+}
+.flip-inner.flipped { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 18px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 22px 18px; gap: 10px; box-shadow: 0 10px 32px rgba(0,0,0,.6);
+  border: 1.5px solid rgba(255,255,255,.1);
+}
+.flip-back { transform: rotateY(180deg); }
+.fc-char { font-size: 5.5rem; line-height: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,.5)); }
+.fc-char-name { font-family: var(--font-head); font-size: 1rem; color: rgba(255,255,255,.6); letter-spacing: 1px; }
+.fc-char-say {
+  font-size: 1.1rem; color: rgba(255,255,255,.85); font-family: var(--font-body);
+  font-style: italic; text-align: center; line-height: 1.5;
+  background: rgba(0,0,0,.25); border-radius: 10px; padding: 8px 14px;
+}
+.fc-hint { font-size: .88rem; color: rgba(255,255,255,.4); font-family: var(--font-mono); letter-spacing: .5px; animation: hintPulse 2s ease-in-out infinite; }
+.fc-back-char { font-size: 3rem; }
+.fc-affirmation {
+  font-size: 1.05rem; color: #fff; font-family: var(--font-body); text-align: center;
+  line-height: 1.6; font-weight: 600; background: rgba(0,0,0,.3); border-radius: 10px; padding: 12px 14px;
+}
+.fc-answer-label { font-family: var(--font-head); font-size: .95rem; color: rgba(255,255,255,.7); }
+.fc-btns { display: flex; gap: 10px; }
+.fc-true-btn, .fc-false-btn {
+  padding: 11px 20px; border: none; border-radius: 12px;
+  cursor: pointer; font-family: var(--font-head); font-size: 1.05rem; font-weight: 700;
+  transition: transform .15s, box-shadow .15s;
+}
+.fc-true-btn  { background: #1A6B2F; color: #fff; box-shadow: 0 3px 10px rgba(26,107,47,.4); }
+.fc-false-btn { background: #6B1A1A; color: #fff; box-shadow: 0 3px 10px rgba(107,26,26,.4); }
+.fc-true-btn:hover  { transform: scale(1.07); }
+.fc-false-btn:hover { transform: scale(1.07); }
+.fc-result { min-height: 22px; text-align: center; font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
+@keyframes charFloat {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-10px) rotate(-4deg); }
+  70% { transform: translateY(-6px) rotate(3deg); }
+}
+@keyframes hintPulse { 0%,100%{ opacity:.4; } 50%{ opacity:.9; } }
+
+/* ─── CHECKLIST ──────────────────────────────────────────────── */
+.chk-lvl-btn {
+  width: 88px; padding: 7px 4px;
+  border-radius: 8px; border: 2px solid transparent;
+  cursor: pointer; font-size: .75rem; font-weight: 700;
+  font-family: var(--font-body); line-height: 1.5;
+  transition: all .18s; background: var(--dark4);
+  color: var(--muted);
+}
+.chk-lvl-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.chk-L { border-color: #1A6B2F; }
+.chk-P { border-color: #7A3A00; }
+.chk-N { border-color: #6B1A1A; }
+.chk-lvl-btn.sel-L { background:#1A6B2F; color:#fff; border-color:#4ADE80; box-shadow:0 0 12px rgba(74,222,128,.3); }
+.chk-lvl-btn.sel-P { background:#7A3A00; color:#fff; border-color:#FBB040; box-shadow:0 0 12px rgba(251,176,64,.3); }
+.chk-lvl-btn.sel-N { background:#6B1A1A; color:#fff; border-color:#EF4444; box-shadow:0 0 12px rgba(239,68,68,.3); }
+
+@keyframes charBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes charCelebrate {
+  0%,100% { transform: rotate(0) scale(1); }
+  25%     { transform: rotate(-15deg) scale(1.2); }
+  75%     { transform: rotate(15deg) scale(1.2); }
+}
+@keyframes reactionIn {
+  from { opacity:0; transform:scale(.5) translateY(20px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
 
 /* ─── SCROLLBAR ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -493,12 +577,12 @@ body::before {
   <button class="tab active" onclick="switchTab(1)" id="tab-1">
     <span class="tab-icon">🚀</span>
     <span>CONEXIÓN Y ACTIVACIÓN</span>
-    <span class="tab-time">0–10 min</span>
+    <span class="tab-time">0–7 min</span>
   </button>
   <button class="tab" onclick="switchTab(2)" id="tab-2">
     <span class="tab-icon">⚙️</span>
     <span>CONSTRUCCIÓN DEL APRENDIZAJE</span>
-    <span class="tab-time">10–40 min</span>
+    <span class="tab-time">7–40 min</span>
   </button>
   <button class="tab" onclick="switchTab(3)" id="tab-3">
     <span class="tab-icon">🏁</span>
@@ -521,75 +605,46 @@ body::before {
       <div class="moment-icon inicio-icon">🚀</div>
       <div>
         <div class="moment-title">Conexión y activación</div>
-        <div class="moment-sub">Tiempo estimado: 10 minutos &nbsp;|&nbsp; 2 momentos</div>
+        <div class="moment-sub">Tiempo estimado: 7 minutos &nbsp;|&nbsp; 1 actividad</div>
       </div>
     </div>
 
-    <!-- Tema + Objetivo + Enunciado -->
+    <!-- Tema + Objetivo -->
     <div style="margin-bottom:18px;">
       <div class="moment-title" style="font-size:1.3rem;margin-bottom:14px;">
         <span style="color:var(--gold2)">TEMA:</span> GENERACIÓN DE REPORTES
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div class="act-card">
-          <div class="act-card-head">
-            <span class="act-name">🎯 Objetivo de la clase</span>
-          </div>
-          <div class="act-card-body">
-            <p class="act-desc">Generar y visualizar reportes en un software especializado, identificando sus secciones estructurales y verificando que la presentación de los datos cumpla con los requerimientos de claridad y formato organizacional.</p>
-          </div>
+      <div class="act-card">
+        <div class="act-card-head">
+          <span class="act-name">🎯 Objetivo de la clase</span>
         </div>
-        <div class="act-card">
-          <div class="act-card-head">
-            <span class="act-name">📌 Enunciado de la actividad</span>
-          </div>
-          <div class="act-card-body">
-            <p class="act-desc">Genera un reporte en el software siguiendo un proceso guiado. Identifica y describe cada una de sus secciones (encabezado, detalle y pie), y verifica que la información se muestre de forma clara y estructurada según los estándares de la organización.</p>
-          </div>
+        <div class="act-card-body">
+          <p class="act-desc">Generar y visualizar reportes, identificando sus secciones estructurales y verificando que la presentación de los datos cumpla con los requerimientos de claridad y formato organizacional.</p>
         </div>
       </div>
     </div>
 
     <div class="activities">
-      <!-- Saludo y asistencia -->
-      <div class="act-card" id="act-1-0">
-        <div class="act-card-head">
-          <span class="time-chip">0–3 min</span>
-          <span class="act-name">👋 Saludo, asistencia y presentación del objetivo</span>
-        </div>
-        <div class="act-card-body">
-          <p class="act-desc">La maestra saluda a la clase, registra la asistencia y presenta el objetivo de la sesión proyectado en la PDI.</p>
-          <ol class="steps">
-            <li>Observa el objetivo de la clase proyectado en pantalla.</li>
-            <li>Anota el objetivo en tu cuaderno o dispositivo.</li>
-          </ol>
-          <div class="mini-timer" style="margin-top:14px;">
-            <span class="mt-label">⏱ TIEMPO</span>
-            <span class="mt-display" id="mt-1-0">03:00</span>
-            <button class="mt-btn green" onclick="startMiniTimer('mt-1-0',180)">▶ Iniciar</button>
-            <button class="mt-btn" onclick="stopMiniTimer('mt-1-0')">■ Stop</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pregunta detonadora en Padlet -->
+      <!-- Pregunta detonadora — ¿Qué sabes del tema? -->
       <div class="act-card" id="act-1-1">
         <div class="act-card-head">
-          <span class="time-chip">3–10 min</span>
-          <span class="act-name">💬 Pregunta detonadora — Padlet</span>
+          <span class="time-chip">0–7 min</span>
+          <span class="act-name">💡 ¿Qué sabes del tema que vamos a trabajar hoy?</span>
         </div>
         <div class="act-card-body">
-          <p class="act-desc">Comparte tu idea, aquí no hay respuesta incorrecta.</p>
-          <ol class="steps">
-            <li>Abre el Padlet desde el botón azul más abajo.</li>
-            <li>Responde a la siguiente pregunta: <b>¿Qué elementos crees que debe tener un reporte para que se entienda correctamente?</b> Escribe tu respuesta con tus propias palabras.</li>
-            <li>Observa en pantalla las respuestas de tus compañeros y reflexiona sobre las diferencias.</li>
-          </ol>
-          <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;">
-            <a href="https://padlet.com" target="_blank" class="tool-btn btn-menti" style="background:#0E4F6B;border-color:#38BDF8;">
+          <p class="act-desc" style="font-size:1.35rem;font-weight:600;line-height:1.7;">
+            Comparte tu idea, aquí no hay respuesta incorrecta.<br>
+            Abre el muro desde el botón morado más abajo y comparte tus saberes.
+          </p>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:18px;flex-wrap:wrap;">
+            <button onclick="openMuroModal()" class="tool-btn" style="background:#2e1060;border:2px solid #A78BFA;color:#EDE9FE;font-size:1rem;padding:13px 22px;">
+              <span class="t-icon">💬</span>
+              <span class="t-label">Vamos a descubrir lo que sabes<span class="t-sub">Muro interactivo</span></span>
+            </button>
+            <button class="tool-btn btn-menti" style="background:#0E4F6B;border-color:#38BDF8;cursor:default;">
               <span class="t-icon">📝</span>
-              <span class="t-label">Padlet<span class="t-sub">Responder la pregunta</span></span>
-            </a>
+              <span class="t-label">Padlet<span class="t-sub">Responder en el muro</span></span>
+            </button>
             <button onclick="openPin('https://padlet.com')" class="tool-btn btn-pdi">
               <span class="t-icon">📺</span>
               <span class="t-label">Pantalla docente<span class="t-sub">Proyectar respuestas</span></span>
@@ -612,7 +667,7 @@ body::before {
       <div class="moment-icon desarrollo-icon">⚙️</div>
       <div>
         <div class="moment-title">Construcción del aprendizaje</div>
-        <div class="moment-sub">Tiempo estimado: 30 minutos &nbsp;|&nbsp; 2 etapas</div>
+        <div class="moment-sub">Tiempo estimado: 33 minutos &nbsp;|&nbsp; 2 etapas</div>
       </div>
     </div>
     <div class="activities">
@@ -620,17 +675,125 @@ body::before {
       <!-- Demostración docente -->
       <div class="act-card" id="act-2-0">
         <div class="act-card-head">
-          <span class="time-chip">10–20 min</span>
+          <span class="time-chip">7–20 min</span>
           <span class="act-name">🖥️ Observa — La maestra genera un reporte paso a paso</span>
         </div>
         <div class="act-card-body">
           <p class="act-desc">Observa en la pantalla cómo la maestra genera un reporte completo usando el Diseñador de Reportes integrado en esta página. Presta atención a cada sección: encabezado, detalle y pie del reporte.</p>
-          <ol class="steps">
-            <li>Observa la pantalla. La maestra abrirá el Diseñador de Reportes con el botón verde de abajo.</li>
-            <li>Identifica las tres secciones del reporte: <b>Encabezado</b> (título, empresa, fecha), <b>Detalle</b> (datos de la tabla) y <b>Pie</b> (totales, firma, notas).</li>
-            <li>Participa respondiendo cuando la maestra pregunte: <i>"¿Qué sección es esta?"</i></li>
-            <li>Al finalizar la demostración, el reporte quedará generado en pantalla como ejemplo.</li>
-          </ol>
+          <p class="act-desc" style="margin-top:4px;">Observa la pantalla. La maestra abrirá el Diseñador de Reportes con el botón verde de abajo y diseñará un reporte de ejemplo.</p>
+
+          <!-- Visual: image left + definitions right aligned to sections -->
+          <div style="display:grid;grid-template-columns:260px 1fr;gap:24px;margin:18px 0 20px 0;align-items:stretch;">
+
+            <!-- LEFT: SVG diagram -->
+            <div>
+              <div style="font-family:var(--font-head);font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-align:center;margin-bottom:6px;">ESTRUCTURA DE UN REPORTE</div>
+              <svg viewBox="0 0 220 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);">
+                <rect width="220" height="340" fill="#1e1e2e" rx="8"/>
+
+                <!-- ENCABEZADO block -->
+                <rect x="10" y="10" width="200" height="78" rx="5" fill="#1a3a6b"/>
+                <rect x="10" y="10" width="200" height="78" rx="5" fill="none" stroke="#5BC0F8" stroke-width="2"/>
+                <rect x="18" y="20" width="90" height="5" rx="2" fill="rgba(255,255,255,.3)"/>
+                <rect x="18" y="30" width="145" height="9" rx="3" fill="rgba(255,255,255,.6)"/>
+                <rect x="18" y="46" width="64" height="5" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="92" y="46" width="64" height="5" rx="2" fill="rgba(255,255,255,.2)"/>
+                <!-- label -->
+                <rect x="52" y="65" width="116" height="16" rx="4" fill="#1A5E8B"/>
+                <text x="110" y="76" font-size="9" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">📋 ENCABEZADO</text>
+
+                <!-- Section labels bar -->
+                <rect x="10" y="88" width="66" height="12" fill="#e8f0fb"/>
+                <text x="43" y="96.5" font-size="6.5" fill="#1a3a6b" font-family="Arial" font-weight="bold" text-anchor="middle">ENCABEZADO ↑</text>
+                <rect x="76" y="88" width="66" height="12" fill="#e8f5e9"/>
+                <text x="109" y="96.5" font-size="6.5" fill="#1a6b2f" font-family="Arial" font-weight="bold" text-anchor="middle">DETALLE ↓</text>
+                <rect x="142" y="88" width="68" height="12" fill="#fff8e1"/>
+                <text x="176" y="96.5" font-size="6.5" fill="#7a3a00" font-family="Arial" font-weight="bold" text-anchor="middle">PIE ↓↓</text>
+
+                <!-- DETALLE block -->
+                <rect x="10" y="100" width="200" height="152" fill="#0f1a0f"/>
+                <rect x="10" y="100" width="200" height="152" fill="none" stroke="#1A6B2F" stroke-width="2"/>
+                <!-- Table header -->
+                <rect x="10" y="100" width="200" height="16" fill="#1a3a6b"/>
+                <text x="60"  y="111" font-size="7" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">Descripción</text>
+                <text x="132" y="111" font-size="7" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">Cantidad</text>
+                <text x="193" y="111" font-size="7" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">Monto</text>
+                <!-- Rows -->
+                <rect x="10" y="116" width="200" height="14" fill="rgba(255,255,255,.06)"/>
+                <rect x="10" y="130" width="200" height="14" fill="transparent"/>
+                <rect x="10" y="144" width="200" height="14" fill="rgba(255,255,255,.06)"/>
+                <rect x="10" y="158" width="200" height="14" fill="transparent"/>
+                <rect x="10" y="172" width="200" height="14" fill="rgba(255,255,255,.06)"/>
+                <rect x="10" y="186" width="200" height="14" fill="transparent"/>
+                <!-- Row content lines -->
+                <rect x="18" y="120" width="72" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="120" y="120" width="26" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="170" y="120" width="32" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="18" y="134" width="64" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="120" y="134" width="22" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="170" y="134" width="32" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="18" y="148" width="70" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="120" y="148" width="24" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="170" y="148" width="32" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="18" y="162" width="60" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="120" y="162" width="28" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="170" y="162" width="32" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="18" y="176" width="68" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="120" y="176" width="22" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="170" y="176" width="32" height="4" rx="2" fill="rgba(255,255,255,.28)"/>
+                <rect x="18" y="190" width="62" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="120" y="190" width="26" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <rect x="170" y="190" width="32" height="4" rx="2" fill="rgba(255,255,255,.2)"/>
+                <!-- Total row -->
+                <rect x="10" y="200" width="200" height="15" fill="rgba(26,58,107,.6)"/>
+                <text x="70" y="210" font-size="7" fill="white" font-family="Arial" font-weight="bold">TOTAL</text>
+                <rect x="162" y="203" width="40" height="5" rx="2" fill="rgba(255,255,255,.45)"/>
+                <!-- label -->
+                <rect x="52" y="222" width="116" height="16" rx="4" fill="#1A6B2F"/>
+                <text x="110" y="233" font-size="9" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">📊 DETALLE</text>
+
+                <!-- PIE block -->
+                <line x1="10" y1="243" x2="210" y2="243" stroke="#7a3a00" stroke-width="2"/>
+                <rect x="10" y="243" width="200" height="87" fill="rgba(255,248,225,.05)"/>
+                <rect x="10" y="243" width="200" height="87" rx="0" fill="none" stroke="#7A3A00" stroke-width="1.5"/>
+                <rect x="18" y="252" width="140" height="5" rx="2" fill="rgba(255,200,80,.25)"/>
+                <rect x="18" y="262" width="110" height="5" rx="2" fill="rgba(255,200,80,.18)"/>
+                <line x1="28"  y1="308" x2="92"  y2="308" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+                <line x1="128" y1="308" x2="192" y2="308" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+                <text x="60"  y="317" font-size="6.5" fill="rgba(255,255,255,.4)" font-family="Arial" text-anchor="middle">Elaborado por</text>
+                <text x="160" y="317" font-size="6.5" fill="rgba(255,255,255,.4)" font-family="Arial" text-anchor="middle">Aprobado por</text>
+                <rect x="38"  y="298" width="44" height="5" rx="2" fill="rgba(255,200,80,.3)"/>
+                <rect x="138" y="298" width="44" height="5" rx="2" fill="rgba(255,200,80,.3)"/>
+                <!-- label -->
+                <rect x="52" y="272" width="116" height="16" rx="4" fill="#7A3A00"/>
+                <text x="110" y="283" font-size="9" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle">📎 PIE</text>
+              </svg>
+            </div>
+
+            <!-- RIGHT: Definitions aligned to each section -->
+            <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;">
+
+              <!-- ENCABEZADO definition — top -->
+              <div style="background:var(--dark3);border-left:4px solid #5BC0F8;border-radius:8px;padding:12px 16px;">
+                <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BC0F8;margin-bottom:5px;">📋 ENCABEZADO</div>
+                <p style="font-size:.95rem;color:#ccc;line-height:1.6;margin:0;">Parte superior del reporte. Identifica al emisor y el propósito del documento. Contiene: <strong style="color:#fff;">nombre de la empresa, título del reporte, fecha y período de referencia.</strong></p>
+              </div>
+
+              <!-- DETALLE definition — center -->
+              <div style="background:var(--dark3);border-left:4px solid #1A6B2F;border-radius:8px;padding:12px 16px;margin:10px 0;">
+                <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BF894;margin-bottom:5px;">📊 DETALLE</div>
+                <p style="font-size:.95rem;color:#ccc;line-height:1.6;margin:0;">Cuerpo principal del reporte. Presenta <strong style="color:#fff;">la información específica que se desea comunicar</strong>: puede mostrar datos en tablas, listas, gráficas o narrativas, dependiendo del tipo de reporte. Incluye los registros y, si aplica, totales o resúmenes.</p>
+              </div>
+
+              <!-- PIE definition — bottom -->
+              <div style="background:var(--dark3);border-left:4px solid #FBB040;border-radius:8px;padding:12px 16px;">
+                <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#FBB040;margin-bottom:5px;">📎 PIE</div>
+                <p style="font-size:.95rem;color:#ccc;line-height:1.6;margin:0;">Parte inferior del reporte. Aporta contexto, validez y trazabilidad al documento. Contiene: <strong style="color:#fff;">notas, observaciones, firma del autor y firma de quien lo aprueba.</strong></p>
+              </div>
+
+            </div>
+          </div>
+
           <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
             <button onclick="document.getElementById('report-designer').scrollIntoView({behavior:'smooth'}); document.querySelector('[data-mode=demo]').click();" class="tool-btn btn-forms">
               <span class="t-icon">📊</span>
@@ -639,38 +802,98 @@ body::before {
           </div>
           <div class="mini-timer" style="margin-top:14px;">
             <span class="mt-label">⏱ TIEMPO</span>
-            <span class="mt-display" id="mt-2-0">10:00</span>
-            <button class="mt-btn green" onclick="startMiniTimer('mt-2-0',600)">▶ Iniciar</button>
+            <span class="mt-display" id="mt-2-0">13:00</span>
+            <button class="mt-btn green" onclick="startMiniTimer('mt-2-0',780)">▶ Iniciar</button>
             <button class="mt-btn" onclick="stopMiniTimer('mt-2-0')">■ Stop</button>
           </div>
         </div>
       </div>
 
-      <!-- Actividad estudiantes -->
+      <!-- GENERADOR DE EQUIPOS -->
+      <div class="act-card" id="act-team-gen" style="border-color:#A78BFA;">
+        <div class="act-card-head" style="background:linear-gradient(135deg,#1a0a2a,#3b1d8a);">
+          <span class="act-name" style="color:#EDE9FE;">🎲 Formación de equipos — Aleatorio</span>
+        </div>
+        <div class="act-card-body">
+          <p class="act-desc">Haz clic en el botón para formar 3 equipos de trabajo de forma aleatoria. Cada equipo recibirá uno de los tres tipos de reporte: <strong>Ventas</strong>, <strong>Asistencia</strong> e <strong>Inventario</strong>.</p>
+
+          <div style="display:flex;gap:10px;margin:14px 0;flex-wrap:wrap;align-items:center;">
+            <button id="team-gen-btn" onclick="generateTeams()"
+              style="background:linear-gradient(135deg,#6D28D9,#7C3AED);border:none;border-radius:10px;color:#fff;cursor:pointer;font-family:var(--font-head);font-size:1.05rem;font-weight:700;padding:12px 28px;transition:all .2s;box-shadow:0 4px 18px rgba(109,40,217,.5);"
+              onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+              🎲 Formar equipos
+            </button>
+            <button onclick="resetTeams()"
+              style="background:var(--dark3);border:1.5px solid #444;border-radius:8px;color:var(--muted);cursor:pointer;font-size:.9rem;font-weight:700;padding:10px 18px;"
+              onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='#444';this.style.color='var(--muted)'">↺ Reiniciar</button>
+          </div>
+
+          <div id="team-results" style="display:none;animation:cardPop .4s ease forwards;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+
+              <!-- EQUIPO 1 — Ventas -->
+              <div id="team-1-card" style="background:var(--dark3);border:2px solid #5BC0F8;border-radius:12px;overflow:hidden;">
+                <div style="background:#1A5E8B;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:1.5rem;">🛒</span>
+                  <div>
+                    <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#fff;">Equipo Ventas</div>
+                    <div style="font-size:.75rem;color:#A8D8F0;">Reporte de Ventas</div>
+                  </div>
+                </div>
+                <div id="team-1-members" style="padding:10px 14px;min-height:80px;"></div>
+              </div>
+
+              <!-- EQUIPO 2 — Asistencia -->
+              <div id="team-2-card" style="background:var(--dark3);border:2px solid #FBB040;border-radius:12px;overflow:hidden;">
+                <div style="background:#7A3A00;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:1.5rem;">📋</span>
+                  <div>
+                    <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#fff;">Equipo Asistencia</div>
+                    <div style="font-size:.75rem;color:#FFD580;">Reporte de Asistencia</div>
+                  </div>
+                </div>
+                <div id="team-2-members" style="padding:10px 14px;min-height:80px;"></div>
+              </div>
+
+              <!-- EQUIPO 3 — Inventario -->
+              <div id="team-3-card" style="background:var(--dark3);border:2px solid #C084FC;border-radius:12px;overflow:hidden;">
+                <div style="background:#4A1A7A;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:1.5rem;">📦</span>
+                  <div>
+                    <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#fff;">Equipo Inventario</div>
+                    <div style="font-size:.75rem;color:#D8B4FE;">Reporte de Inventario</div>
+                  </div>
+                </div>
+                <div id="team-3-members" style="padding:10px 14px;min-height:80px;"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <div class="act-card" id="act-2-1">
         <div class="act-card-head">
           <span class="time-chip">20–40 min</span>
           <span class="act-name">🧑‍💻 ¡Hazlo tú! — Genera y analiza tu propio reporte</span>
         </div>
         <div class="act-card-body">
-          <p class="act-desc">Ahora es tu turno. Usando el Diseñador de Reportes, crea tu propio reporte completando las tres secciones. Luego identifica y describe cada parte en el formulario de análisis.</p>
+          <p class="act-desc">Ahora es tu turno. Vamos a dividir el grupo en tres equipos, cada equipo va a generar un reporte: Reporte de Ventas, Reporte de Asistencia y Reporte de Inventario. Usando el Diseñador de Reportes, crea el reporte asignado a tu equipo completando las tres secciones. Luego identifica y describe cada parte en el formulario de análisis.</p>
           <ol class="steps">
-            <li>Abre el Diseñador de Reportes con el botón verde de abajo.</li>
-            <li>Completa el <b>Encabezado</b>: nombre de la empresa, título del reporte y fecha.</li>
-            <li>Completa el <b>Detalle</b>: ingresa al menos 3 filas de datos en la tabla.</li>
-            <li>Completa el <b>Pie</b>: escribe los totales y una nota o firma.</li>
-            <li>Genera el reporte y observa cómo se presentan los datos.</li>
-            <li>Describe brevemente cada sección en el campo de análisis que aparece en la herramienta.</li>
+            <li class="step">Abre el Diseñador de Reportes con el botón verde de abajo.</li>
+            <li class="step">Selecciona el reporte asignado a tu equipo.</li>
+            <li class="step">Completa el <b>Encabezado</b>: nombre de la empresa, título del reporte y fecha.</li>
+            <li class="step">Completa el <b>Detalle</b>: ingresa al menos <b>8 filas</b> de datos en la tabla.</li>
+            <li class="step">Completa el <b>Pie</b>: escribe los totales y una nota o firma.</li>
+            <li class="step">Genera el reporte y observa cómo se presentan los datos.</li>
+            <li class="step">Describe brevemente cada sección en el campo de análisis que aparece en la herramienta.</li>
           </ol>
           <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
             <button onclick="document.getElementById('report-designer').scrollIntoView({behavior:'smooth'}); document.querySelector('[data-mode=student]').click();" class="tool-btn btn-forms">
               <span class="t-icon">📊</span>
               <span class="t-label">Diseñador de Reportes<span class="t-sub">Crear mi reporte</span></span>
             </button>
-            <a href="https://classroom.google.com" target="_blank" class="tool-btn btn-class">
-              <span class="t-icon">📤</span>
-              <span class="t-label">Classroom<span class="t-sub">Entregar captura</span></span>
-            </a>
           </div>
           <div class="mini-timer" style="margin-top:14px;">
             <span class="mt-label">⏱ TIEMPO</span>
@@ -694,11 +917,44 @@ body::before {
             <div style="font-size:.75rem;color:#A7F3D0;font-family:var(--font-mono);">Herramienta integrada · Act. 6.3.3</div>
           </div>
         </div>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button data-mode="demo" onclick="setReportMode('demo',this)" style="background:#1A6B2F;border:2px solid #4ADE80;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem;font-weight:700;padding:7px 16px;">📺 Modo Demostración</button>
           <button data-mode="student" onclick="setReportMode('student',this)" style="background:var(--dark3);border:2px solid #444;border-radius:8px;color:#aaa;cursor:pointer;font-size:.85rem;font-weight:700;padding:7px 16px;">🧑‍💻 Modo Estudiante</button>
           <button onclick="clearReport()" style="background:var(--dark3);border:1.5px solid var(--red);border-radius:8px;color:var(--red);cursor:pointer;font-size:.85rem;font-weight:700;padding:7px 14px;">↺ Limpiar</button>
         </div>
+      </div>
+
+      <!-- TEMPLATE SELECTOR — Modo Estudiante only -->
+      <div id="rp-template-bar" style="display:none;background:var(--dark3);border-bottom:1px solid #2a2a2a;padding:18px 20px;">
+
+        <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:var(--gold2);margin-bottom:10px;letter-spacing:.5px;">Selecciona el tipo de reporte que vas a diseñar:</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <button class="tpl-btn" id="tpl-ventas" onclick="selectTemplate('ventas',this)"
+            style="background:var(--dark2);border:2px solid #1A5E8B;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
+            <div style="font-size:1.6rem;">🛒</div>
+            <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#5BC0F8;margin-top:6px;">Reporte de Ventas</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Productos · Cantidades · Montos</div>
+          </button>
+          <button class="tpl-btn" id="tpl-asistencia" onclick="selectTemplate('asistencia',this)"
+            style="background:var(--dark2);border:2px solid #7A3A00;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
+            <div style="font-size:1.6rem;">📋</div>
+            <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#FBB040;margin-top:6px;">Reporte de Asistencia</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Empleados · Presentes · Ausentes</div>
+          </button>
+          <button class="tpl-btn" id="tpl-inventario" onclick="selectTemplate('inventario',this)"
+            style="background:var(--dark2);border:2px solid #4A1A7A;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
+            <div style="font-size:1.6rem;">📦</div>
+            <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#C084FC;margin-top:6px;">Reporte de Inventario</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Productos · Stock · Precio unitario</div>
+          </button>
+        </div>
+
+        <!-- Contextual enunciado — appears after selecting template -->
+        <div id="rp-tpl-hint" style="display:none;margin-top:14px;background:var(--dark2);border:1.5px solid var(--gold);border-radius:12px;padding:16px 20px;">
+          <div style="font-family:var(--font-head);font-size:.78rem;font-weight:700;color:var(--gold2);letter-spacing:1px;margin-bottom:8px;">📌 ENUNCIADO</div>
+          <p id="rp-tpl-hint-text" style="font-size:1rem;color:#fff;line-height:1.7;margin:0;"></p>
+        </div>
+
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
@@ -707,83 +963,79 @@ body::before {
         <div style="padding:20px;border-right:1px solid #2a2a2a;">
 
           <!-- ENCABEZADO -->
-          <div style="margin-bottom:20px;">
-            <div style="background:var(--dark3);border-left:4px solid #1A5E8B;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BC0F8;letter-spacing:.5px;">📋 SECCIÓN 1 — ENCABEZADO</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="margin-bottom:18px;">
+            <div style="background:var(--dark3);border-left:4px solid #1A5E8B;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BC0F8;letter-spacing:.5px;">📋 SECCIÓN 1 — ENCABEZADO</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
               <div>
-                <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Nombre de la empresa / institución</label>
+                <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Nombre de la empresa / institución</label>
                 <input id="rp-empresa" type="text" placeholder="Ej: TechReport Solutions S.A." oninput="updatePreview()"
                   style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
               </div>
               <div>
-                <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Título del reporte</label>
-                <input id="rp-titulo" type="text" placeholder="Ej: Reporte de Ventas Mensuales" oninput="updatePreview()"
+                <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Título del reporte</label>
+                <input id="rp-titulo" type="text" placeholder="Ej: Reporte de Ventas — Enero 2025" oninput="updatePreview()"
                   style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <div>
-                  <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Fecha</label>
+                  <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Fecha</label>
                   <input id="rp-fecha" type="date" oninput="updatePreview()"
-                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1.05rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
+                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:.95rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
                 </div>
                 <div>
-                  <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Período</label>
+                  <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Período</label>
                   <input id="rp-periodo" type="text" placeholder="Ej: Enero 2025" oninput="updatePreview()"
-                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1.05rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
+                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:.95rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A5E8B'" onblur="this.style.borderColor='#333'">
                 </div>
               </div>
             </div>
           </div>
 
           <!-- DETALLE -->
-          <div style="margin-bottom:20px;">
-            <div style="background:var(--dark3);border-left:4px solid #1A6B2F;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BF894;letter-spacing:.5px;">📊 SECCIÓN 2 — DETALLE (Datos)</div>
-            <!-- Column headers -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:6px;margin-bottom:6px;">
-              <input id="rp-col1" type="text" value="Descripción" oninput="updatePreview()" placeholder="Columna 1"
-                style="padding:7px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
-              <input id="rp-col2" type="text" value="Cantidad" oninput="updatePreview()" placeholder="Columna 2"
-                style="padding:7px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
-              <input id="rp-col3" type="text" value="Monto (RD$)" oninput="updatePreview()" placeholder="Columna 3"
-                style="padding:7px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
-              <span style="font-size:.75rem;color:var(--muted);padding:7px 4px;text-align:center;"></span>
+          <div style="margin-bottom:18px;">
+            <div style="background:var(--dark3);border-left:4px solid #1A6B2F;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5BF894;letter-spacing:.5px;">📊 SECCIÓN 2 — DETALLE</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:5px;margin-bottom:5px;">
+              <input id="rp-col1" type="text" value="Descripción" oninput="updatePreview()"
+                style="padding:6px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
+              <input id="rp-col2" type="text" value="Cantidad" oninput="updatePreview()"
+                style="padding:6px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
+              <input id="rp-col3" type="text" value="Monto (RD$)" oninput="updatePreview()"
+                style="padding:6px;background:#111;border:1px solid #555;border-radius:5px;color:var(--gold2);font-size:.85rem;font-family:var(--font-mono);text-align:center;outline:none;">
+              <span></span>
             </div>
-            <!-- Rows container -->
-            <div id="rp-rows" style="display:flex;flex-direction:column;gap:5px;">
-              <!-- rows added by JS -->
-            </div>
-            <button onclick="addRow()" style="margin-top:8px;background:var(--dark3);border:1.5px dashed #1A6B2F;border-radius:7px;color:#5BF894;cursor:pointer;font-size:.85rem;font-weight:700;padding:7px 16px;width:100%;transition:all .15s;" onmouseover="this.style.background='#0a2e15'" onmouseout="this.style.background='var(--dark3)'">+ Agregar fila</button>
+            <div id="rp-rows" style="display:flex;flex-direction:column;gap:5px;"></div>
+            <button onclick="addRow()" style="margin-top:7px;background:var(--dark3);border:1.5px dashed #1A6B2F;border-radius:7px;color:#5BF894;cursor:pointer;font-size:.85rem;font-weight:700;padding:6px 16px;width:100%;transition:all .15s;" onmouseover="this.style.background='#0a2e15'" onmouseout="this.style.background='var(--dark3)'">+ Agregar fila</button>
           </div>
 
           <!-- PIE -->
-          <div>
-            <div style="background:var(--dark3);border-left:4px solid #7A3A00;border-radius:6px;padding:8px 14px;margin-bottom:12px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#FBB040;letter-spacing:.5px;">📎 SECCIÓN 3 — PIE DEL REPORTE</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="margin-bottom:18px;">
+            <div style="background:var(--dark3);border-left:4px solid #7A3A00;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-family:var(--font-head);font-size:1rem;font-weight:700;color:#FBB040;letter-spacing:.5px;">📎 SECCIÓN 3 — PIE</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
               <div>
-                <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Nota o conclusión</label>
-                <textarea id="rp-nota" rows="2" placeholder="Ej: Reporte generado para uso interno. Aprobado por el departamento de finanzas." oninput="updatePreview()"
-                  style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1.05rem;font-family:var(--font-body);outline:none;resize:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'"></textarea>
+                <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Nota o conclusión</label>
+                <textarea id="rp-nota" rows="2" placeholder="Ej: Reporte generado para uso interno." oninput="updatePreview()"
+                  style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:.95rem;font-family:var(--font-body);outline:none;resize:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'"></textarea>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <div>
-                  <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Elaborado por</label>
+                  <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Elaborado por</label>
                   <input id="rp-autor" type="text" placeholder="Nombre del autor" oninput="updatePreview()"
-                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1.05rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'">
+                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:.95rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'">
                 </div>
                 <div>
-                  <label style="font-size:.95rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:4px;">Aprobado por</label>
+                  <label style="font-size:.9rem;color:var(--muted);font-family:var(--font-mono);display:block;margin-bottom:3px;">Aprobado por</label>
                   <input id="rp-aprobado" type="text" placeholder="Nombre del aprobador" oninput="updatePreview()"
-                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:1.05rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'">
+                    style="width:100%;padding:9px 12px;background:var(--dark3);border:1.5px solid #333;border-radius:7px;color:#fff;font-size:.95rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#7A3A00'" onblur="this.style.borderColor='#333'">
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Análisis -->
-          <div style="margin-top:20px;background:var(--dark3);border:1.5px solid var(--gold);border-radius:10px;padding:16px;">
-            <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--gold2);margin-bottom:10px;">✍️ Análisis del reporte — Describe cada sección</div>
-            <textarea id="rp-analisis" rows="4" placeholder="Ejemplo:&#10;Encabezado: Contiene el nombre de la empresa, el título del reporte y la fecha...&#10;Detalle: Muestra los datos organizados en una tabla con columnas de...&#10;Pie: Incluye la nota de aprobación y la firma del responsable..."
-              style="width:100%;padding:10px;background:var(--dark2);border:1.5px solid #333;border-radius:7px;color:#ccc;font-size:1.05rem;font-family:var(--font-body);outline:none;resize:vertical;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#333'"></textarea>
+          <!-- ANÁLISIS -->
+          <div id="rp-analisis-block" style="background:var(--dark3);border:1.5px solid var(--gold);border-radius:10px;padding:14px 16px;">
+            <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--gold2);margin-bottom:8px;">✍️ Análisis del reporte — Describe cada sección</div>
+            <textarea id="rp-analisis" rows="4" placeholder="Encabezado: Contiene...&#10;Detalle: Muestra los datos...&#10;Pie: Incluye..."
+              style="width:100%;padding:10px;background:var(--dark2);border:1.5px solid #333;border-radius:7px;color:#ccc;font-size:.95rem;font-family:var(--font-body);outline:none;resize:vertical;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#333'"></textarea>
           </div>
         </div>
 
@@ -792,8 +1044,6 @@ body::before {
           <div style="font-family:var(--font-head);font-size:.85rem;font-weight:700;color:#555;letter-spacing:1px;text-align:center;margin-bottom:12px;text-transform:uppercase;">Vista previa del reporte</div>
 
           <div id="report-preview" style="background:#fff;border:1px solid #ccc;border-radius:6px;padding:0;font-family:Arial,sans-serif;font-size:11px;color:#111;min-height:400px;box-shadow:0 4px 16px rgba(0,0,0,.15);">
-
-            <!-- ENCABEZADO PREVIEW -->
             <div id="prev-header" style="background:#1a3a6b;color:#fff;padding:16px 20px;border-radius:6px 6px 0 0;">
               <div id="prev-empresa" style="font-size:10px;letter-spacing:1px;opacity:.8;text-transform:uppercase;margin-bottom:3px;">EMPRESA / INSTITUCIÓN</div>
               <div id="prev-titulo" style="font-size:15px;font-weight:700;margin-bottom:4px;">TÍTULO DEL REPORTE</div>
@@ -802,15 +1052,11 @@ body::before {
                 <span>📆 Período: <span id="prev-periodo">--</span></span>
               </div>
             </div>
-
-            <!-- SECCIÓN LABELS -->
             <div style="display:flex;gap:0;border-bottom:2px solid #1a3a6b;">
               <div style="background:#e8f0fb;padding:4px 12px;font-size:9px;font-weight:700;color:#1a3a6b;letter-spacing:.5px;border-right:1px solid #ccc;">ENCABEZADO ↑</div>
               <div style="background:#e8f5e9;padding:4px 12px;font-size:9px;font-weight:700;color:#1a6b2f;letter-spacing:.5px;border-right:1px solid #ccc;">DETALLE ↓</div>
               <div style="background:#fff8e1;padding:4px 12px;font-size:9px;font-weight:700;color:#7a3a00;letter-spacing:.5px;">PIE ↓↓</div>
             </div>
-
-            <!-- DETALLE PREVIEW -->
             <div style="padding:12px 16px;">
               <table id="prev-table" style="width:100%;border-collapse:collapse;font-size:10px;">
                 <thead id="prev-thead">
@@ -821,9 +1067,9 @@ body::before {
                   </tr>
                 </thead>
                 <tbody id="prev-tbody">
-                  <tr style="background:#f9f9f9;"><td colspan="3" style="padding:10px;text-align:center;color:#aaa;border:1px solid #eee;">Agrega filas de datos en el formulario</td></tr>
+                  <tr style="background:#f9f9f9;"><td colspan="3" style="padding:10px;text-align:center;color:#aaa;border:1px solid #eee;">Agrega filas de datos</td></tr>
                 </tbody>
-                <tfoot id="prev-tfoot">
+                <tfoot>
                   <tr style="background:#e8f0fb;font-weight:700;">
                     <td colspan="2" style="padding:6px 8px;border:1px solid #ccc;font-size:10px;">TOTAL</td>
                     <td id="prev-total" style="padding:6px 8px;text-align:right;border:1px solid #ccc;font-size:10px;">RD$ 0.00</td>
@@ -831,8 +1077,6 @@ body::before {
                 </tfoot>
               </table>
             </div>
-
-            <!-- PIE PREVIEW -->
             <div id="prev-footer" style="background:#fff8e1;border-top:2px solid #7a3a00;padding:12px 16px;border-radius:0 0 6px 6px;">
               <div id="prev-nota" style="font-size:10px;color:#555;margin-bottom:8px;font-style:italic;">Nota: --</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px;">
@@ -848,11 +1092,13 @@ body::before {
             </div>
           </div>
 
-          <!-- Print button -->
-          <button onclick="printReport()" style="margin-top:12px;width:100%;background:#1A6B2F;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.95rem;font-weight:700;padding:10px;transition:all .15s;" onmouseover="this.style.background='#0f4520'" onmouseout="this.style.background='#1A6B2F'">🖨️ Imprimir / Guardar como PDF</button>
+          <button onclick="generatePDF()" style="margin-top:12px;width:100%;background:#1A6B2F;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.95rem;font-weight:700;padding:10px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='#0f4520'" onmouseout="this.style.background='#1A6B2F'">
+            📄 Generar PDF
+          </button>
         </div>
       </div>
     </div><!-- /report-designer -->
+
 
   </div><!-- /panel-2 -->
 
@@ -873,12 +1119,10 @@ body::before {
           <span class="act-name">🎤 Socialización — Presentamos nuestros reportes</span>
         </div>
         <div class="act-card-body">
-          <p class="act-desc">Dos o tres estudiantes compartirán su reporte con la clase. Gira la ruleta para seleccionar quién presenta. Cada presentación dura 1 minuto.</p>
+          <p class="act-desc">Tres estudiantes, uno de cada equipo, compartirán su reporte con la clase. Gira la ruleta para seleccionar quién presenta. Cada presentación dura 1 minuto.</p>
           <ol class="steps">
-            <li>Haz clic en <b>¡GIRAR!</b> para seleccionar un estudiante al azar.</li>
-            <li>Si eres seleccionado: muestra tu reporte y explica en 1 minuto cada sección (encabezado, detalle y pie).</li>
-            <li>Si eres del público: observa y anota una diferencia con tu reporte.</li>
-            <li>Escucha la retroalimentación de la maestra con atención.</li>
+            <li class="step">Clic en <b>¡GIRAR!</b> para seleccionar un estudiante al azar.</li>
+            <li class="step">Muestra tu reporte y explica en 1 minuto cada sección (encabezado, detalle y pie).</li>
           </ol>
 
           <!-- RULETA -->
@@ -898,31 +1142,66 @@ body::before {
               </button>
             </div>
 
-            <!-- Right panel: result + selected list -->
-            <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:14px;">
+            <!-- Right panel: result + 3 team slots -->
+            <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:12px;">
+
               <!-- Result box -->
-              <div id="wheel-result" style="background:var(--dark2);border:2px solid #333;border-radius:10px;padding:16px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                <div style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:6px;">RESULTADO</div>
-                <div id="wheel-name" style="font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:#555;">Gira la ruleta...</div>
+              <div id="wheel-result" style="background:var(--dark2);border:2px solid #333;border-radius:10px;padding:14px;text-align:center;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div style="font-size:.78rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:5px;">RESULTADO</div>
+                <div id="wheel-name" style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:#555;">Gira la ruleta...</div>
               </div>
 
-              <!-- Selected list -->
+              <!-- 3 team presenter slots -->
               <div style="background:var(--dark2);border:1px solid #333;border-radius:10px;padding:14px;">
-                <div style="font-family:var(--font-head);font-size:.85rem;font-weight:700;color:var(--gold2);margin-bottom:8px;letter-spacing:.5px;">✅ SELECCIONADOS PARA PRESENTAR</div>
-                <div id="selected-list" style="display:flex;flex-direction:column;gap:6px;min-height:40px;">
-                  <span style="font-size:.85rem;color:#555;font-style:italic;">Ninguno aún</span>
+                <div style="font-family:var(--font-head);font-size:.85rem;font-weight:700;color:var(--gold2);margin-bottom:10px;letter-spacing:.5px;">🎤 UN PRESENTADOR POR EQUIPO</div>
+
+                <!-- Equipo Ventas slot -->
+                <div style="margin-bottom:8px;border-radius:8px;overflow:hidden;border:1.5px solid #1A5E8B;">
+                  <div style="background:#1A5E8B;padding:4px 10px;font-family:var(--font-head);font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.5px;">🛒 EQUIPO VENTAS</div>
+                  <div id="slot-ventas" style="padding:8px 10px;font-family:var(--font-body);font-size:.88rem;color:#555;font-style:italic;min-height:32px;display:flex;align-items:center;background:var(--dark3);">
+                    Pendiente...
+                  </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:12px;">
-                  <button onclick="addSelected()" id="btn-add"
-                    style="flex:1;background:#1A6B2F;border:none;border-radius:7px;color:#fff;cursor:pointer;font-size:.85rem;font-weight:700;padding:7px;display:none;"
-                    >➕ Agregar</button>
-                  <button onclick="resetWheel()"
-                    style="flex:1;background:var(--dark3);border:1.5px solid #444;border-radius:7px;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:700;padding:7px;"
-                    onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
-                    onmouseout="this.style.borderColor='#444';this.style.color='var(--muted)'">↺ Reiniciar</button>
+
+                <!-- Equipo Asistencia slot -->
+                <div style="margin-bottom:8px;border-radius:8px;overflow:hidden;border:1.5px solid #7A3A00;">
+                  <div style="background:#7A3A00;padding:4px 10px;font-family:var(--font-head);font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.5px;">📋 EQUIPO ASISTENCIA</div>
+                  <div id="slot-asistencia" style="padding:8px 10px;font-family:var(--font-body);font-size:.88rem;color:#555;font-style:italic;min-height:32px;display:flex;align-items:center;background:var(--dark3);">
+                    Pendiente...
+                  </div>
                 </div>
+
+                <!-- Equipo Inventario slot -->
+                <div style="border-radius:8px;overflow:hidden;border:1.5px solid #4A1A7A;">
+                  <div style="background:#4A1A7A;padding:4px 10px;font-family:var(--font-head);font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.5px;">📦 EQUIPO INVENTARIO</div>
+                  <div id="slot-inventario" style="padding:8px 10px;font-family:var(--font-body);font-size:.88rem;color:#555;font-style:italic;min-height:32px;display:flex;align-items:center;background:var(--dark3);">
+                    Pendiente...
+                  </div>
+                </div>
+
+                <!-- Add button + team selector -->
+                <div id="btn-add-wrap" style="display:none;margin-top:12px;">
+                  <div style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:6px;">Asignar al equipo:</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button onclick="assignToSlot('ventas')" id="btn-slot-ventas"
+                      style="flex:1;background:#1A5E8B;border:none;border-radius:7px;color:#fff;cursor:pointer;font-size:.78rem;font-weight:700;padding:7px 6px;transition:opacity .2s;"
+                      >🛒 Ventas</button>
+                    <button onclick="assignToSlot('asistencia')" id="btn-slot-asistencia"
+                      style="flex:1;background:#7A3A00;border:none;border-radius:7px;color:#fff;cursor:pointer;font-size:.78rem;font-weight:700;padding:7px 6px;transition:opacity .2s;"
+                      >📋 Asistencia</button>
+                    <button onclick="assignToSlot('inventario')" id="btn-slot-inventario"
+                      style="flex:1;background:#4A1A7A;border:none;border-radius:7px;color:#fff;cursor:pointer;font-size:.78rem;font-weight:700;padding:7px 6px;transition:opacity .2s;"
+                      >📦 Inventario</button>
+                  </div>
+                </div>
+
+                <button onclick="resetWheel()" style="width:100%;margin-top:10px;background:var(--dark3);border:1.5px solid #444;border-radius:7px;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:700;padding:7px;"
+                  onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+                  onmouseout="this.style.borderColor='#444';this.style.color='var(--muted)'">↺ Reiniciar</button>
               </div>
+
             </div>
+
           </div>
 
           <div class="mini-timer" style="margin-top:14px;">
@@ -940,20 +1219,17 @@ body::before {
           <span class="act-name">🧩 ¿Qué aprendiste hoy? — Ticket de salida</span>
         </div>
         <div class="act-card-body">
-          <p class="act-desc">Antes de salir, reflexiona sobre lo que aprendiste hoy. Responde las 3 preguntas en Mentimeter — tus respuestas son anónimas y le ayudan a la maestra a mejorar.</p>
-          <ol class="steps">
-            <li>Abre <b>menti.com</b> con el código que aparece en pantalla.</li>
-            <li>Responde honestamente:<br>
-              &nbsp;&nbsp;— ¿Qué aprendí hoy?<br>
-              &nbsp;&nbsp;— ¿Qué me resultó difícil?<br>
-              &nbsp;&nbsp;— ¿Para qué me sirve generar reportes en mi vida profesional?</li>
-            <li>Observa en la pantalla las respuestas de toda la clase.</li>
-          </ol>
+          <p class="act-desc">Antes de terminar, reflexiona sobre lo que aprendiste hoy. Ingresa a nuestro Ticket de Salida, botón morado y comparte con la clase.</p>
+          <p class="act-desc" style="margin-top:6px;">Conviértete en un explorador, en una pensadora o en un campeón y comparte tus nuevos conocimientos.</p>
           <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;">
-            <a href="https://www.menti.com" target="_blank" class="tool-btn btn-menti">
+            <button onclick="openTicketModal()" class="tool-btn" style="background:#2e1060;border:2px solid #A78BFA;color:#EDE9FE;">
+              <span class="t-icon">🏁</span>
+              <span class="t-label">Ticket de Salida<span class="t-sub">Comparte lo aprendido</span></span>
+            </button>
+            <button class="tool-btn btn-menti" style="cursor:default;">
               <span class="t-icon">💬</span>
               <span class="t-label">Mentimeter<span class="t-sub">Ticket de salida</span></span>
-            </a>
+            </button>
             <button onclick="openPin('https://www.mentimeter.com')" class="tool-btn btn-pdi">
               <span class="t-icon">📺</span>
               <span class="t-label">Pantalla docente<span class="t-sub">Proyectar resultados</span></span>
@@ -967,7 +1243,110 @@ body::before {
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- /activities -->
+
+      <!-- CHECKLIST OBJETIVO -->
+      <div class="act-card" id="act-3-check" style="margin-top:18px;border-color:var(--gold);">
+        <div class="act-card-head" style="background:linear-gradient(135deg,#1a1a00,#2a2000);">
+          <span class="act-name" style="color:var(--gold2);">✅ Verificación del objetivo de la clase</span>
+        </div>
+        <div class="act-card-body">
+          <div style="background:var(--dark3);border:1.5px solid var(--gold);border-radius:10px;padding:16px 20px;margin-bottom:18px;">
+            <div style="font-family:var(--font-mono);font-size:.78rem;color:var(--gold2);letter-spacing:1px;margin-bottom:8px;">OBJETIVO</div>
+            <div style="font-size:1.05rem;color:#ccc;line-height:1.7;">Generar y visualizar reportes, <strong style="color:#fff;">identificando sus secciones estructurales</strong> y verificando que la presentación de los datos cumpla con los <strong style="color:#fff;">requerimientos de claridad y formato organizacional</strong>.</div>
+          </div>
+
+          <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--gold2);margin-bottom:14px;letter-spacing:.5px;">Selecciona el nivel de desempeño para cada indicador:</div>
+
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:.95rem;">
+              <thead>
+                <tr>
+                  <th style="background:var(--red2);color:#fff;padding:11px 14px;text-align:left;border:1px solid #550000;font-family:var(--font-head);font-size:.95rem;letter-spacing:.5px;width:40%;">Indicador</th>
+                  <th style="background:#1A6B2F;color:#fff;padding:11px 10px;text-align:center;border:1px solid #0f4520;font-family:var(--font-head);font-size:.9rem;width:20%;">✅ Logrado<br><span style="font-weight:400;font-size:.78rem;">100%</span></th>
+                  <th style="background:#7A3A00;color:#fff;padding:11px 10px;text-align:center;border:1px solid #5a2a00;font-family:var(--font-head);font-size:.9rem;width:20%;">⚠️ En proceso<br><span style="font-weight:400;font-size:.78rem;">50%</span></th>
+                  <th style="background:#6B1A1A;color:#fff;padding:11px 10px;text-align:center;border:1px solid #4a0a0a;font-family:var(--font-head);font-size:.9rem;width:20%;">❌ No logrado<br><span style="font-weight:400;font-size:.78rem;">0%</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Indicator 1 -->
+                <tr style="background:var(--dark3);">
+                  <td style="padding:12px 14px;border:1px solid #333;vertical-align:top;">
+                    <div style="font-weight:700;color:#5BC0F8;font-family:var(--font-head);font-size:.98rem;">1. Se observó que los estudiantes reconocen las tres secciones del reporte</div>
+                    <div style="font-size:.82rem;color:var(--muted);margin-top:3px;">Identifican encabezado, detalle y pie, y explican la función de cada una</div>
+                  </td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-L" onclick="setChkLevel(1,'L',this)">✅<br><span>Logrado</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-P" onclick="setChkLevel(1,'P',this)">⚠️<br><span>En proceso</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-N" onclick="setChkLevel(1,'N',this)">❌<br><span>No logrado</span></button></td>
+                </tr>
+                <!-- Indicator 2 -->
+                <tr style="background:var(--dark2);">
+                  <td style="padding:12px 14px;border:1px solid #333;vertical-align:top;">
+                    <div style="font-weight:700;color:#5BF894;font-family:var(--font-head);font-size:.98rem;">2. Se evidenció que los estudiantes generaron un reporte con todos sus elementos</div>
+                    <div style="font-size:.82rem;color:var(--muted);margin-top:3px;">Encabezado, detalle con datos estructurados y pie completados correctamente</div>
+                  </td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-L" onclick="setChkLevel(2,'L',this)">✅<br><span>Logrado</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-P" onclick="setChkLevel(2,'P',this)">⚠️<br><span>En proceso</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-N" onclick="setChkLevel(2,'N',this)">❌<br><span>No logrado</span></button></td>
+                </tr>
+                <!-- Indicator 3 -->
+                <tr style="background:var(--dark3);">
+                  <td style="padding:12px 14px;border:1px solid #333;vertical-align:top;">
+                    <div style="font-weight:700;color:#FBB040;font-family:var(--font-head);font-size:.98rem;">3. Los reportes presentan información clara, organizada y con formato profesional</div>
+                    <div style="font-size:.82rem;color:var(--muted);margin-top:3px;">Datos legibles, columnas identificadas y estilo acorde a estándares organizacionales</div>
+                  </td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-L" onclick="setChkLevel(3,'L',this)">✅<br><span>Logrado</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-P" onclick="setChkLevel(3,'P',this)">⚠️<br><span>En proceso</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-N" onclick="setChkLevel(3,'N',this)">❌<br><span>No logrado</span></button></td>
+                </tr>
+                <!-- Indicator 4 -->
+                <tr style="background:var(--dark2);">
+                  <td style="padding:12px 14px;border:1px solid #333;vertical-align:top;">
+                    <div style="font-weight:700;color:#C084FC;font-family:var(--font-head);font-size:.98rem;">4. Los estudiantes describieron cada sección utilizando vocabulario técnico correcto</div>
+                    <div style="font-size:.82rem;color:var(--muted);margin-top:3px;">El análisis redactado refleja comprensión de la función de cada parte del reporte</div>
+                  </td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-L" onclick="setChkLevel(4,'L',this)">✅<br><span>Logrado</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-P" onclick="setChkLevel(4,'P',this)">⚠️<br><span>En proceso</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-N" onclick="setChkLevel(4,'N',this)">❌<br><span>No logrado</span></button></td>
+                </tr>
+                <!-- Indicator 5 -->
+                <tr style="background:var(--dark3);">
+                  <td style="padding:12px 14px;border:1px solid #333;vertical-align:top;">
+                    <div style="font-weight:700;color:var(--gold2);font-family:var(--font-head);font-size:.98rem;">5. Los estudiantes establecieron conexión entre el reporte y su aplicación laboral</div>
+                    <div style="font-size:.82rem;color:var(--muted);margin-top:3px;">Relacionaron la generación de reportes con situaciones reales del mundo profesional</div>
+                  </td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-L" onclick="setChkLevel(5,'L',this)">✅<br><span>Logrado</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-P" onclick="setChkLevel(5,'P',this)">⚠️<br><span>En proceso</span></button></td>
+                  <td style="padding:8px;border:1px solid #333;text-align:center;vertical-align:middle;"><button class="chk-lvl-btn chk-N" onclick="setChkLevel(5,'N',this)">❌<br><span>No logrado</span></button></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="background:linear-gradient(135deg,var(--red2),#2a0000);">
+                  <td style="padding:12px 14px;border:1px solid #550000;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:.5px;">
+                    <span style="color:var(--gold2);">CUMPLIMIENTO DEL OBJETIVO</span>
+                    <span style="display:block;font-size:.75rem;font-weight:400;color:#aaa;margin-top:2px;">Selecciona un nivel en cada indicador</span>
+                  </td>
+                  <td colspan="3" style="padding:12px 14px;border:1px solid #550000;text-align:center;vertical-align:middle;">
+                    <div id="chk-score" style="font-family:var(--font-mono);font-size:2.2rem;font-weight:700;color:var(--gold2);">— %</div>
+                    <div id="chk-msg" style="font-size:.78rem;color:var(--muted);margin-top:2px;">Selecciona un nivel en cada indicador</div>
+                    <!-- Progress bar -->
+                    <div style="background:var(--dark2);border-radius:6px;height:10px;overflow:hidden;border:1px solid #333;margin-top:8px;">
+                      <div id="chk-bar" style="height:100%;background:linear-gradient(90deg,var(--red2),var(--gold));border-radius:6px;transition:width .5s ease;width:0%;"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+            <button onclick="resetChecklist()" style="background:var(--dark2);border:1.5px solid #444;border-radius:8px;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:700;padding:8px 16px;"
+              onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'"
+              onmouseout="this.style.borderColor='#444';this.style.color='var(--muted)'">↺ Reiniciar evaluación</button>
+          </div>
+        </div>
+      </div>
+
   </div><!-- /panel-3 -->
 
   <!-- ══ PANEL 4: EVALUACIÓN ════════════════════════════════════ -->
@@ -1023,8 +1402,8 @@ body::before {
             </thead>
             <tbody>
               <tr style="background:var(--dark3);">
-                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#5BC0F8;">1. Participación activa</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Inicio — Padlet</div></td>
-                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Participa en la pregunta detonadora del Padlet respondiendo con claridad y pertinencia sobre los elementos de un reporte.</td>
+                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#5BC0F8;">1. Participación activa</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Inicio — Muro interactivo</div></td>
+                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Comparte sus saberes previos en el muro interactivo respondiendo con claridad a la pregunta: ¿Qué sabes del tema que vamos a trabajar hoy?</td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(1,'E')" id="ev1-E" class="ev-btn ev-excelente">⭐<br><span>Excelente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(1,'B')" id="ev1-B" class="ev-btn ev-bueno">✅<br><span>Bueno</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(1,'S')" id="ev1-S" class="ev-btn ev-suficiente">⚠️<br><span>Suficiente</span></button></td>
@@ -1032,7 +1411,7 @@ body::before {
               </tr>
               <tr style="background:var(--dark2);">
                 <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#5BF894;">2. Identificación de secciones</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Desarrollo — Demostración</div></td>
-                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Identifica correctamente las tres secciones del reporte (encabezado, detalle y pie) durante la demostración de la maestra.</td>
+                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Identifica y describe correctamente las tres secciones del reporte (encabezado, detalle y pie) a partir de la explicación visual y la demostración de la maestra.</td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(2,'E')" id="ev2-E" class="ev-btn ev-excelente">⭐<br><span>Excelente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(2,'B')" id="ev2-B" class="ev-btn ev-bueno">✅<br><span>Bueno</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(2,'S')" id="ev2-S" class="ev-btn ev-suficiente">⚠️<br><span>Suficiente</span></button></td>
@@ -1047,24 +1426,24 @@ body::before {
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(3,'I')" id="ev3-I" class="ev-btn ev-insuficiente">❌<br><span>Insuficiente</span></button></td>
               </tr>
               <tr style="background:var(--dark2);">
-                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#C084FC;">4. Detalle estructurado</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Desarrollo — Diseñador</div></td>
-                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Ingresa al menos 3 filas de datos coherentes en el detalle del reporte, con columnas correctamente identificadas.</td>
+                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#C084FC;">4. Detalle estructurado</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Desarrollo — Trabajo en equipo</div></td>
+                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Ingresa al menos 8 filas de datos coherentes en el detalle del reporte asignado a su equipo, con columnas correctamente identificadas y datos realistas.</td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(4,'E')" id="ev4-E" class="ev-btn ev-excelente">⭐<br><span>Excelente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(4,'B')" id="ev4-B" class="ev-btn ev-bueno">✅<br><span>Bueno</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(4,'S')" id="ev4-S" class="ev-btn ev-suficiente">⚠️<br><span>Suficiente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(4,'I')" id="ev4-I" class="ev-btn ev-insuficiente">❌<br><span>Insuficiente</span></button></td>
               </tr>
               <tr style="background:var(--dark3);">
-                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#FCA5A5;">5. Pie completo y análisis</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Desarrollo — Diseñador</div></td>
-                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Completa el pie del reporte y redacta el análisis describiendo correctamente las tres secciones con sus propias palabras.</td>
+                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#FCA5A5;">5. Pie completo y análisis</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Desarrollo — Diseñador · Análisis</div></td>
+                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Completa el pie del reporte con nota y firmas, y redacta el análisis describiendo correctamente las tres secciones usando vocabulario técnico propio.</td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(5,'E')" id="ev5-E" class="ev-btn ev-excelente">⭐<br><span>Excelente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(5,'B')" id="ev5-B" class="ev-btn ev-bueno">✅<br><span>Bueno</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(5,'S')" id="ev5-S" class="ev-btn ev-suficiente">⚠️<br><span>Suficiente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(5,'I')" id="ev5-I" class="ev-btn ev-insuficiente">❌<br><span>Insuficiente</span></button></td>
               </tr>
               <tr style="background:var(--dark2);">
-                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--gold2);">6. Comunicación y metacognición</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Cierre — Presentación y Mentimeter</div></td>
-                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Explica su reporte con claridad (si es seleccionado) y completa el ticket de salida con reflexión genuina sobre su aprendizaje.</td>
+                <td style="padding:11px 14px;border:1px solid #333;vertical-align:top;"><div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--gold2);">6. Comunicación y metacognición</div><div style="font-size:.85rem;color:var(--muted);margin-top:3px;">Cierre — Socialización y Ticket de Salida</div></td>
+                <td style="padding:11px 14px;border:1px solid #333;color:#ccc;vertical-align:top;font-size:.95rem;line-height:1.65;">Explica su reporte con claridad durante la socialización y participa en el Ticket de Salida reflexionando genuinamente sobre lo que aprendió y su aplicación profesional.</td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(6,'E')" id="ev6-E" class="ev-btn ev-excelente">⭐<br><span>Excelente</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(6,'B')" id="ev6-B" class="ev-btn ev-bueno">✅<br><span>Bueno</span></button></td>
                 <td style="padding:6px;border:1px solid #333;text-align:center;vertical-align:middle;"><button onclick="setIndicator(6,'S')" id="ev6-S" class="ev-btn ev-suficiente">⚠️<br><span>Suficiente</span></button></td>
@@ -1096,6 +1475,519 @@ body::before {
 
 
 <!-- ░░ FLOATING BUTTONS ░░ -->
+<!-- ░░ MURO OFFLINE MODAL ░░ -->
+<div id="muro-overlay" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.93);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:var(--dark2);border:2px solid #A78BFA;border-radius:20px;width:100%;max-width:1280px;overflow-y:auto;max-height:95vh;box-shadow:0 20px 60px rgba(0,0,0,.9);">
+
+    <!-- header STICKY -->
+    <div style="position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#1a0a2a,#3b1d8a);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.5);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:2rem;">🃏</span>
+        <div>
+          <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:#EDE9FE;letter-spacing:.5px;">SABERES PREVIOS — ¿Verdadero o Falso?</div>
+          <div style="font-size:.78rem;color:#A78BFA;font-family:var(--font-mono);">Voltea cada tarjeta, lee la afirmación y responde</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:.7rem;color:#A78BFA;letter-spacing:.5px;">PUNTUACIÓN</div>
+          <div id="flip-score" style="font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--gold2);">0 / 0</div>
+        </div>
+        <button onclick="resetFlipCards()" style="background:var(--dark2);border:1.5px solid #444;border-radius:8px;color:var(--muted);cursor:pointer;font-size:.82rem;font-weight:700;padding:6px 12px;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#444'">↺ Reiniciar</button>
+        <button onclick="closeMuroModal()" style="background:var(--red2);border:1.5px solid var(--red);border-radius:8px;color:#fff;cursor:pointer;font-size:.9rem;font-weight:700;padding:6px 18px;" onmouseover="this.style.background='var(--red)'" onmouseout="this.style.background='var(--red2)'">✕ Cerrar</button>
+      </div>
+    </div>
+
+    <!-- cards grid 4 cols -->
+    <div style="padding:20px 20px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+
+      <!-- CARD 1 — El Superhéroe (sabe todo) -->
+      <div class="flip-card" id="fc-1" onclick="flipCard(1)">
+        <div class="flip-inner" id="fi-1">
+          <div class="flip-front" style="background:linear-gradient(160deg,#1a2060,#3b1d8a);">
+            <div class="fc-char" id="fch-1" style="animation:charFloat 2.5s ease-in-out infinite;">🦸</div>
+            <div class="fc-char-name">— El Superhéroe —</div>
+            <div class="fc-char-say">"¡Yo sé la respuesta!"</div>
+            <div class="fc-hint">👆 Toca para voltear</div>
+          </div>
+          <div class="flip-back" style="background:linear-gradient(160deg,#0D1B3E,#1A2E6B);">
+            <div class="fc-back-char">🦸</div>
+            <div class="fc-affirmation">"Un reporte siempre tiene tres secciones: encabezado, detalle y pie."</div>
+            <div class="fc-answer-label">¿Es esto correcto?</div>
+            <div class="fc-btns">
+              <button class="fc-true-btn" onclick="answerCard(event,1,true)">✅ VERDADERO</button>
+              <button class="fc-false-btn" onclick="answerCard(event,1,false)">❌ FALSO</button>
+            </div>
+            <div class="fc-result" id="fcr-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 — La Maga (pregunta misteriosa) -->
+      <div class="flip-card" id="fc-2" onclick="flipCard(2)">
+        <div class="flip-inner" id="fi-2">
+          <div class="flip-front" style="background:linear-gradient(160deg,#3a0060,#7a1a9a);">
+            <div class="fc-char" id="fch-2" style="animation:charFloat 2.5s ease-in-out .6s infinite;">🧙‍♀️</div>
+            <div class="fc-char-name">— La Maga —</div>
+            <div class="fc-char-say">"¿Eres capaz de adivinar?"</div>
+            <div class="fc-hint">👆 Toca para voltear</div>
+          </div>
+          <div class="flip-back" style="background:linear-gradient(160deg,#0D1B3E,#1A2E6B);">
+            <div class="fc-back-char">🧙‍♀️</div>
+            <div class="fc-affirmation">"El detalle de un reporte solo puede mostrar una única columna de datos."</div>
+            <div class="fc-answer-label">¿Es esto correcto?</div>
+            <div class="fc-btns">
+              <button class="fc-true-btn" onclick="answerCard(event,2,true)">✅ VERDADERO</button>
+              <button class="fc-false-btn" onclick="answerCard(event,2,false)">❌ FALSO</button>
+            </div>
+            <div class="fc-result" id="fcr-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 — El Robot (calculador) -->
+      <div class="flip-card" id="fc-3" onclick="flipCard(3)">
+        <div class="flip-inner" id="fi-3">
+          <div class="flip-front" style="background:linear-gradient(160deg,#003a3a,#006060);">
+            <div class="fc-char" id="fch-3" style="animation:charFloat 2.5s ease-in-out 1.2s infinite;">🤖</div>
+            <div class="fc-char-name">— El Robot —</div>
+            <div class="fc-char-say">"Procesando pregunta..."</div>
+            <div class="fc-hint">👆 Toca para voltear</div>
+          </div>
+          <div class="flip-back" style="background:linear-gradient(160deg,#0D1B3E,#1A2E6B);">
+            <div class="fc-back-char">🤖</div>
+            <div class="fc-affirmation">"El pie del reporte es la parte más importante porque contiene todos los datos."</div>
+            <div class="fc-answer-label">¿Es esto correcto?</div>
+            <div class="fc-btns">
+              <button class="fc-true-btn" onclick="answerCard(event,3,true)">✅ VERDADERO</button>
+              <button class="fc-false-btn" onclick="answerCard(event,3,false)">❌ FALSO</button>
+            </div>
+            <div class="fc-result" id="fcr-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4 — La Astronauta (exploradora) -->
+      <div class="flip-card" id="fc-4" onclick="flipCard(4)">
+        <div class="flip-inner" id="fi-4">
+          <div class="flip-front" style="background:linear-gradient(160deg,#001a3a,#003a7a);">
+            <div class="fc-char" id="fch-4" style="animation:charFloat 2.5s ease-in-out 1.8s infinite;">👩‍🚀</div>
+            <div class="fc-char-name">— La Astronauta —</div>
+            <div class="fc-char-say">"¡Exploremos el espacio!"</div>
+            <div class="fc-hint">👆 Toca para voltear</div>
+          </div>
+          <div class="flip-back" style="background:linear-gradient(160deg,#0D1B3E,#1A2E6B);">
+            <div class="fc-back-char">👩‍🚀</div>
+            <div class="fc-affirmation">"El encabezado de un reporte debe incluir el nombre de la empresa, el título y la fecha."</div>
+            <div class="fc-answer-label">¿Es esto correcto?</div>
+            <div class="fc-btns">
+              <button class="fc-true-btn" onclick="answerCard(event,4,true)">✅ VERDADERO</button>
+              <button class="fc-false-btn" onclick="answerCard(event,4,false)">❌ FALSO</button>
+            </div>
+            <div class="fc-result" id="fcr-4"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- reaction area -->
+    <div id="flip-reaction" style="min-height:70px;display:flex;align-items:center;justify-content:center;padding:0 20px 16px;"></div>
+
+    <!-- BONUS CARD — ¿Puedes ir más allá? -->
+    <div style="padding:0 20px 24px;">
+      <div style="position:relative;max-width:700px;margin:0 auto;">
+
+        <!-- Button face (visible before click) -->
+        <div id="bonus-btn-face" onclick="flipBonusCard()"
+          style="background:linear-gradient(135deg,#C8A000,#F0C030);border-radius:16px;padding:18px 28px;display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;box-shadow:0 6px 24px rgba(200,160,0,.4);transition:transform .2s;border:2px solid rgba(255,255,255,.2);"
+          onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <span style="font-size:2.2rem;">🚀</span>
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:#1A1A1A;letter-spacing:.5px;">¿PUEDES IR MÁS ALLÁ?</div>
+            <div style="font-size:.9rem;color:rgba(0,0,0,.6);font-family:var(--font-body);margin-top:2px;">Toca para revelar una pregunta de reflexión</div>
+          </div>
+          <span style="font-size:2.2rem;">🌟</span>
+        </div>
+
+        <!-- Question face (hidden, appears after click) -->
+        <div id="bonus-question-face"
+          style="display:none;background:linear-gradient(135deg,#1a0a2a,#2e1a6e);border:2px solid var(--gold);border-radius:16px;padding:24px 28px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:cardPop .5s cubic-bezier(.36,1.8,.6,1) forwards;">
+          <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;">
+            <span style="font-size:2.8rem;flex-shrink:0;animation:charFloat 3s ease-in-out infinite;">🌍</span>
+            <div>
+              <div style="font-family:var(--font-head);font-size:.85rem;font-weight:700;color:var(--gold2);letter-spacing:1px;margin-bottom:6px;">CONEXIÓN CON TU MUNDO</div>
+              <div style="font-family:var(--font-body);font-size:1.15rem;color:#fff;font-weight:600;line-height:1.6;">
+                Piensa en una institución, en una empresa de tu barrio o en cualquier negocio que conozcas. <strong style="color:var(--gold2);">¿Qué tipo de reporte crees que generan? ¿Para qué lo usarían?</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 student avatars for oral response -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px;">
+            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:2.2rem;">🦸</div>
+              <div style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold2);margin-top:6px;">El Superhéroe</div>
+            </div>
+            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:2.2rem;">🧙‍♀️</div>
+              <div style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold2);margin-top:6px;">La Maga</div>
+            </div>
+            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:2.2rem;">🤖</div>
+              <div style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold2);margin-top:6px;">El Robot</div>
+            </div>
+            <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center;">
+              <div style="font-size:2.2rem;">👩‍🚀</div>
+              <div style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold2);margin-top:6px;">La Astronauta</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ░░ TICKET OFFLINE MODAL ░░ -->
+<div id="ticket-overlay" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.96);align-items:center;justify-content:center;">
+
+  <!-- SCENE CONTAINER — full screen -->
+  <div style="position:relative;width:100vw;height:100vh;overflow:hidden;font-family:var(--font-body);">
+
+    <!-- ── SKY + LANDSCAPE SVG BACKGROUND ── -->
+    <svg id="tk-scene" style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 1200 680" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Sky gradient -->
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0A0A2E"/>
+          <stop offset="60%" stop-color="#0D2157"/>
+          <stop offset="100%" stop-color="#1A3A6B"/>
+        </linearGradient>
+        <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1A4020"/>
+          <stop offset="100%" stop-color="#0D2010"/>
+        </linearGradient>
+        <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFF9C4" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#FFF9C4" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="1200" height="680" fill="url(#skyGrad)"/>
+
+      <!-- Stars -->
+      <g fill="#fff" opacity=".7">
+        <circle cx="80" cy="40" r="1.2"/><circle cx="210" cy="25" r="1"/><circle cx="340" cy="55" r="1.5"/>
+        <circle cx="450" cy="20" r="1"/><circle cx="560" cy="45" r="1.2"/><circle cx="680" cy="30" r="1"/>
+        <circle cx="790" cy="60" r="1.5"/><circle cx="900" cy="18" r="1"/><circle cx="1020" cy="42" r="1.2"/>
+        <circle cx="1100" cy="28" r="1"/><circle cx="150" cy="80" r=".8"/><circle cx="280" cy="100" r="1"/>
+        <circle cx="420" cy="75" r=".8"/><circle cx="630" cy="85" r="1.2"/><circle cx="850" cy="72" r=".8"/>
+        <circle cx="970" cy="90" r="1"/><circle cx="1150" cy="65" r="1.2"/><circle cx="50" cy="120" r=".8"/>
+        <circle cx="320" cy="140" r=".6"/><circle cx="740" cy="110" r="1"/><circle cx="1080" cy="130" r=".8"/>
+      </g>
+
+      <!-- Moon -->
+      <circle cx="980" cy="80" r="55" fill="url(#moonGlow)"/>
+      <circle cx="980" cy="80" r="38" fill="#FFF9C4" opacity=".9"/>
+      <circle cx="995" cy="68" r="12" fill="#E8E0A0" opacity=".6"/>
+
+      <!-- Mountains back -->
+      <path d="M0 320 L120 180 L240 300 L380 140 L500 280 L620 160 L720 290 L840 130 L960 270 L1080 150 L1200 260 L1200 420 L0 420Z" fill="#0D1A3A" opacity=".9"/>
+      <!-- Mountains mid -->
+      <path d="M0 380 L100 260 L200 350 L320 210 L440 340 L560 230 L660 360 L780 220 L880 355 L1000 240 L1100 350 L1200 280 L1200 450 L0 450Z" fill="#112240" opacity=".95"/>
+
+      <!-- Ground -->
+      <rect x="0" y="430" width="1200" height="250" fill="url(#groundGrad)"/>
+
+      <!-- Grass texture -->
+      <path d="M0 430 Q150 415 300 432 Q450 448 600 428 Q750 410 900 435 Q1050 452 1200 430 L1200 460 L0 460Z" fill="#1E5C28" opacity=".8"/>
+
+      <!-- Trees left -->
+      <g fill="#0D3018" opacity=".9">
+        <rect x="30" y="370" width="12" height="65"/>
+        <ellipse cx="36" cy="360" rx="28" ry="36"/>
+        <ellipse cx="36" cy="345" rx="20" ry="26"/>
+        <rect x="90" y="385" width="10" height="50"/>
+        <ellipse cx="95" cy="378" rx="22" ry="28"/>
+        <ellipse cx="95" cy="365" rx="16" ry="20"/>
+      </g>
+      <!-- Trees right -->
+      <g fill="#0D3018" opacity=".9">
+        <rect x="1120" y="375" width="12" height="60"/>
+        <ellipse cx="1126" cy="365" rx="26" ry="32"/>
+        <ellipse cx="1126" cy="350" rx="18" ry="24"/>
+        <rect x="1165" y="388" width="10" height="48"/>
+        <ellipse cx="1170" cy="380" rx="20" ry="26"/>
+      </g>
+
+      <!-- Road / path — winding from left to right -->
+      <path d="M-10 548 Q100 520 250 500 Q400 478 520 460 Q640 442 750 440 Q860 442 980 460 Q1100 480 1200 510 Q1210 515 1210 548"
+        fill="none" stroke="#8B7355" stroke-width="110" opacity=".85"/>
+      <path d="M-10 548 Q100 520 250 500 Q400 478 520 460 Q640 442 750 440 Q860 442 980 460 Q1100 480 1200 510 Q1210 515 1210 548"
+        fill="none" stroke="#A0896A" stroke-width="98"  opacity=".7"/>
+      <!-- Road dashes -->
+      <path d="M-10 548 Q100 520 250 500 Q400 478 520 460 Q640 442 750 440 Q860 442 980 460 Q1100 480 1200 510 Q1210 515 1210 548"
+        fill="none" stroke="#D4BC8A" stroke-width="5" stroke-dasharray="40 22" opacity=".55"/>
+
+      <!-- Road border -->
+      <path d="M-10 548 Q100 520 250 500 Q400 478 520 460 Q640 442 750 440 Q860 442 980 460 Q1100 480 1200 510 Q1210 515 1210 548"
+        fill="none" stroke="#5C4A2A" stroke-width="116" opacity=".3"/>
+
+      <!-- Grass patches -->
+      <ellipse cx="250" cy="460" rx="40" ry="12" fill="#1E5C28" opacity=".5"/>
+      <ellipse cx="750" cy="430" rx="35" ry="10" fill="#1E5C28" opacity=".4"/>
+      <ellipse cx="1000" cy="455" rx="30" ry="9" fill="#1E5C28" opacity=".5"/>
+
+      <!-- Station markers on the road -->
+      <!-- Station 1 — left -->
+      <circle cx="200" cy="510" r="22" fill="#1A5E8B" stroke="#5BC0F8" stroke-width="3" opacity=".9"/>
+      <text x="200" y="516" font-size="16" text-anchor="middle" fill="white">📍</text>
+      <!-- Station 2 — mid -->
+      <circle cx="600" cy="453" r="22" fill="#7A3A00" stroke="#FBB040" stroke-width="3" opacity=".9"/>
+      <text x="600" y="459" font-size="16" text-anchor="middle" fill="white">⚡</text>
+      <!-- Station 3 — right -->
+      <circle cx="1020" cy="468" r="22" fill="#1A6B2F" stroke="#4ADE80" stroke-width="3" opacity=".9"/>
+      <text x="1020" y="474" font-size="16" text-anchor="middle" fill="white">🏁</text>
+
+    </svg>
+
+    <!-- ── HEADER BAR ── -->
+    <div style="position:absolute;top:0;left:0;right:0;z-index:10;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid rgba(167,139,250,.3);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.6rem;">🏁</span>
+        <div>
+          <div style="font-family:var(--font-head);font-size:1.15rem;font-weight:700;color:#EDE9FE;letter-spacing:.5px;">EL CAMINO DEL APRENDIZAJE</div>
+          <div style="font-size:.75rem;color:#A78BFA;font-family:var(--font-mono);">Ticket de salida · Act. 6.3.3 — Haz clic en cada parada para revelar la pregunta</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="tk-progress" style="font-family:var(--font-mono);font-size:.85rem;color:#A78BFA;">0 / 3 respondidas</div>
+        <button onclick="resetTicketPath()" style="background:rgba(255,255,255,.08);border:1.5px solid #444;border-radius:8px;color:#aaa;cursor:pointer;font-size:.85rem;font-weight:700;padding:6px 12px;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#444'">↺</button>
+        <button onclick="closeTicketModal()" style="background:none;border:1.5px solid #555;border-radius:8px;color:#aaa;cursor:pointer;font-size:.9rem;font-weight:700;padding:6px 14px;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='#555';this.style.color='#aaa'">✕ Cerrar</button>
+      </div>
+    </div>
+
+    <!-- ── STATION 1 — EL EXPLORADOR (full body, large) ── -->
+    <div id="tk-pin1" style="position:absolute;left:13%;bottom:20%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;z-index:8;" onclick="revealStation(1)">
+      <!-- SVG full-body character: explorer with hat and map -->
+      <svg id="tk-char1-svg" width="220" height="320" viewBox="0 0 110 160" style="filter:drop-shadow(0 8px 32px rgba(91,192,248,.7));animation:charBounce 2.5s ease-in-out infinite;">
+        <!-- Hat -->
+        <ellipse cx="55" cy="28" rx="30" ry="6" fill="#8B5E3C"/>
+        <rect x="30" y="10" width="50" height="22" rx="10" fill="#A0722A"/>
+        <rect x="36" y="20" width="38" height="6" fill="#C8A000" rx="2"/>
+        <!-- Head -->
+        <circle cx="55" cy="48" r="20" fill="#FDBCB4"/>
+        <!-- Eyes -->
+        <circle cx="47" cy="45" r="3.5" fill="#1A1A1A"/>
+        <circle cx="63" cy="45" r="3.5" fill="#1A1A1A"/>
+        <circle cx="48.5" cy="43.5" r="1.2" fill="white"/>
+        <circle cx="64.5" cy="43.5" r="1.2" fill="white"/>
+        <!-- Smile -->
+        <path d="M47 53 Q55 60 63 53" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Blush -->
+        <circle cx="43" cy="52" r="5" fill="#FFB3BA" opacity=".5"/>
+        <circle cx="67" cy="52" r="5" fill="#FFB3BA" opacity=".5"/>
+        <!-- Body -->
+        <rect x="32" y="68" width="46" height="50" rx="10" fill="#1A5E8B"/>
+        <!-- Backpack strap -->
+        <rect x="70" y="72" width="8" height="40" rx="4" fill="#0D3A5C"/>
+        <!-- Left arm — down at side -->
+        <rect x="13" y="70" width="12" height="32" rx="6" fill="#1A5E8B"/>
+        <!-- Left hand -->
+        <circle cx="19" cy="104" r="7" fill="#FDBCB4"/>
+        <!-- Right arm — raised holding map -->
+        <rect x="85" y="66" width="12" height="28" rx="6" fill="#1A5E8B" transform="rotate(-30,91,66)"/>
+        <!-- Right hand -->
+        <circle cx="98" cy="70" r="7" fill="#FDBCB4"/>
+        <!-- Map in raised right hand -->
+        <rect x="100" y="58" width="16" height="13" rx="2" fill="#FFF9C4"/>
+        <line x1="103" y1="63" x2="113" y2="63" stroke="#C8A000" stroke-width="1.2"/>
+        <line x1="103" y1="67" x2="111" y2="67" stroke="#C8A000" stroke-width="1.2"/>
+        <!-- Legs -->
+        <rect x="36" y="115" width="16" height="36" rx="8" fill="#2C3E7A"/>
+        <rect x="58" y="115" width="16" height="36" rx="8" fill="#2C3E7A"/>
+        <!-- Boots -->
+        <ellipse cx="44" cy="150" rx="11" ry="7" fill="#5C3A1A"/>
+        <ellipse cx="66" cy="150" rx="11" ry="7" fill="#5C3A1A"/>
+      </svg>
+      <div id="tk-pin1-label" style="background:rgba(26,94,139,.95);border:2px solid #5BC0F8;border-radius:20px;padding:6px 18px;font-family:var(--font-head);font-size:.88rem;font-weight:700;color:#5BC0F8;white-space:nowrap;animation:hintPulse 2s ease-in-out infinite;box-shadow:0 4px 14px rgba(91,192,248,.3);">👆 ¡Tócame!</div>
+      <div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.8);">El Explorador</div>
+    </div>
+
+    <!-- ── STATION 2 — LA PENSADORA (full body, large) ── -->
+    <div id="tk-pin2" style="position:absolute;left:50%;bottom:22%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;z-index:8;opacity:.4;filter:grayscale(.8);" onclick="revealStation(2)">
+      <svg id="tk-char2-svg" width="220" height="320" viewBox="0 0 110 160" style="filter:drop-shadow(0 8px 32px rgba(251,176,64,.7));animation:charBounce 2.5s ease-in-out .7s infinite;">
+        <!-- Hair bun -->
+        <circle cx="55" cy="22" r="16" fill="#8B4513"/>
+        <circle cx="55" cy="18" r="12" fill="#A0522D"/>
+        <!-- Head -->
+        <circle cx="55" cy="46" r="20" fill="#F1C27D"/>
+        <!-- Glasses -->
+        <circle cx="47" cy="44" r="7" fill="none" stroke="#2C3E7A" stroke-width="2.5"/>
+        <circle cx="63" cy="44" r="7" fill="none" stroke="#2C3E7A" stroke-width="2.5"/>
+        <line x1="54" y1="44" x2="56" y2="44" stroke="#2C3E7A" stroke-width="2.5"/>
+        <line x1="26" y1="42" x2="40" y2="43" stroke="#2C3E7A" stroke-width="2"/>
+        <line x1="70" y1="43" x2="82" y2="42" stroke="#2C3E7A" stroke-width="2"/>
+        <!-- Eyes behind glasses -->
+        <circle cx="47" cy="44" r="2.5" fill="#1A1A1A"/>
+        <circle cx="63" cy="44" r="2.5" fill="#1A1A1A"/>
+        <circle cx="48" cy="43" r="1" fill="white"/>
+        <circle cx="64" cy="43" r="1" fill="white"/>
+        <!-- Thinking expression -->
+        <path d="M48 54 Q55 58 62 54" stroke="#8B4513" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <!-- Thinking dot -->
+        <circle cx="72" cy="36" r="3" fill="#FBB040" opacity=".8"/>
+        <circle cx="80" cy="28" r="4" fill="#FBB040" opacity=".6"/>
+        <circle cx="89" cy="18" r="6" fill="#FBB040" opacity=".4"/>
+        <!-- Body — academic robe -->
+        <rect x="30" y="66" width="50" height="52" rx="10" fill="#4A1A7A"/>
+        <!-- Collar -->
+        <path d="M42 66 L55 80 L68 66" fill="#EDE9FE" opacity=".9"/>
+        <!-- Left arm — bent up holding book -->
+        <rect x="13" y="68" width="12" height="24" rx="6" fill="#4A1A7A" transform="rotate(30,19,68)"/>
+        <!-- Left hand -->
+        <circle cx="8" cy="86" r="7" fill="#F1C27D"/>
+        <!-- Book resting on left hand -->
+        <rect x="-4" y="72" width="18" height="22" rx="2" fill="#C00000"/>
+        <rect x="-3" y="73" width="16" height="20" rx="1" fill="#EDE9FE"/>
+        <line x1="0" y1="78" x2="10" y2="78" stroke="#7A3A00" stroke-width="1.2"/>
+        <line x1="0" y1="82" x2="10" y2="82" stroke="#7A3A00" stroke-width="1.2"/>
+        <line x1="0" y1="86" x2="7"  y2="86" stroke="#7A3A00" stroke-width="1.2"/>
+        <!-- Right arm — hand on chin thinking pose -->
+        <rect x="85" y="68" width="12" height="22" rx="6" fill="#4A1A7A" transform="rotate(-25,91,68)"/>
+        <!-- Right hand at chin -->
+        <circle cx="97" cy="76" r="7" fill="#F1C27D"/>
+        <!-- Legs -->
+        <rect x="36" y="115" width="16" height="36" rx="8" fill="#2e1060"/>
+        <rect x="58" y="115" width="16" height="36" rx="8" fill="#2e1060"/>
+        <!-- Shoes -->
+        <ellipse cx="44" cy="150" rx="11" ry="7" fill="#1A1A1A"/>
+        <ellipse cx="66" cy="150" rx="11" ry="7" fill="#1A1A1A"/>
+      </svg>
+      <div id="tk-pin2-label" style="background:rgba(122,58,0,.95);border:2px solid #FBB040;border-radius:20px;padding:6px 18px;font-family:var(--font-head);font-size:.88rem;font-weight:700;color:#FBB040;white-space:nowrap;box-shadow:0 4px 14px rgba(251,176,64,.3);">🔒 Bloqueado</div>
+      <div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.8);">La Pensadora</div>
+    </div>
+
+    <!-- ── STATION 3 — EL CAMPEÓN (full body, large) ── -->
+    <div id="tk-pin3" style="position:absolute;left:87%;bottom:19%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;z-index:8;opacity:.4;filter:grayscale(.8);" onclick="revealStation(3)">
+      <svg id="tk-char3-svg" width="220" height="340" viewBox="0 0 110 170" style="filter:drop-shadow(0 8px 32px rgba(74,222,128,.7));animation:charBounce 2.5s ease-in-out 1.4s infinite;">
+        <!-- Trophy crown on head -->
+        <path d="M35 22 L30 8 L43 16 L55 4 L67 16 L80 8 L75 22 Z" fill="#C8A000"/>
+        <rect x="33" y="20" width="44" height="10" rx="3" fill="#C8A000"/>
+        <!-- Star on crown -->
+        <polygon points="55,10 57,16 63,16 58,20 60,26 55,22 50,26 52,20 47,16 53,16" fill="#FFF9C4"/>
+        <!-- Head -->
+        <circle cx="55" cy="48" r="20" fill="#FDBCB4"/>
+        <!-- Excited eyes -->
+        <circle cx="47" cy="44" r="4" fill="#1A1A1A"/>
+        <circle cx="63" cy="44" r="4" fill="#1A1A1A"/>
+        <circle cx="49" cy="42" r="1.5" fill="white"/>
+        <circle cx="65" cy="42" r="1.5" fill="white"/>
+        <!-- Big smile -->
+        <path d="M44 53 Q55 64 66 53" stroke="#C0392B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Teeth -->
+        <path d="M48 55 Q55 61 62 55" fill="white" opacity=".8"/>
+        <!-- Blush -->
+        <circle cx="42" cy="52" r="6" fill="#FFB3BA" opacity=".6"/>
+        <circle cx="68" cy="52" r="6" fill="#FFB3BA" opacity=".6"/>
+        <!-- Body — winner jersey -->
+        <rect x="30" y="68" width="50" height="50" rx="10" fill="#1A6B2F"/>
+        <!-- Number 1 on jersey -->
+        <text x="55" y="100" font-size="20" text-anchor="middle" fill="#FFF9C4" font-weight="bold" font-family="Arial">1</text>
+        <!-- Cape -->
+        <path d="M30 68 Q10 100 18 130 L30 118Z" fill="#C00000" opacity=".85"/>
+        <path d="M80 68 Q100 100 92 130 L80 118Z" fill="#C00000" opacity=".85"/>
+        <!-- Left arm raised straight up in victory -->
+        <rect x="13" y="50" width="12" height="30" rx="6" fill="#1A6B2F" transform="rotate(-15,19,50)"/>
+        <!-- Left fist up -->
+        <circle cx="9" cy="40" r="9" fill="#FDBCB4"/>
+        <!-- Left fist detail -->
+        <rect x="4" y="38" width="10" height="6" rx="3" fill="#FDBCB4" opacity=".7"/>
+        <!-- Right arm raised holding trophy -->
+        <rect x="85" y="48" width="12" height="28" rx="6" fill="#1A6B2F" transform="rotate(15,91,48)"/>
+        <!-- Right hand -->
+        <circle cx="101" cy="42" r="8" fill="#FDBCB4"/>
+        <!-- Trophy held high -->
+        <ellipse cx="101" cy="24" rx="10" ry="7" fill="#C8A000"/>
+        <rect x="95" y="24" width="12" height="18" rx="2" fill="#C8A000"/>
+        <ellipse cx="101" cy="42" rx="8" ry="5" fill="#A08000"/>
+        <rect x="97" y="42" width="8" height="5" rx="1" fill="#A08000"/>
+        <rect x="94" y="46" width="14" height="3" rx="1.5" fill="#8B6914"/>
+        <!-- Star sparkles -->
+        <text x="20" y="35" font-size="12" fill="#FFF9C4" opacity=".8">✨</text>
+        <text x="78" y="30" font-size="10" fill="#FFF9C4" opacity=".7">⭐</text>
+        <!-- Legs -->
+        <rect x="36" y="115" width="16" height="40" rx="8" fill="#0A3A1A"/>
+        <rect x="58" y="115" width="16" height="40" rx="8" fill="#0A3A1A"/>
+        <!-- Shoes -->
+        <ellipse cx="44" cy="153" rx="12" ry="7" fill="#1A1A1A"/>
+        <ellipse cx="66" cy="153" rx="12" ry="7" fill="#1A1A1A"/>
+      </svg>
+      <div id="tk-pin3-label" style="background:rgba(26,107,47,.95);border:2px solid #4ADE80;border-radius:20px;padding:6px 18px;font-family:var(--font-head);font-size:.88rem;font-weight:700;color:#4ADE80;white-space:nowrap;box-shadow:0 4px 14px rgba(74,222,128,.3);">🔒 Bloqueado</div>
+      <div style="font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.8);">El Campeón</div>
+    </div>
+
+    <!-- ── QUESTION POPUP — oral only, with motivational bubble ── -->
+    <div id="tk-popup" style="display:none;position:absolute;z-index:20;width:400px;max-width:88vw;">
+      <div style="background:rgba(10,10,40,.97);border:2px solid #A78BFA;border-radius:20px;padding:24px 26px;box-shadow:0 16px 56px rgba(0,0,0,.85);backdrop-filter:blur(14px);">
+        <!-- badge -->
+        <div id="tk-popup-badge" style="display:inline-block;border-radius:20px;padding:4px 14px;font-family:var(--font-head);font-size:.78rem;font-weight:700;margin-bottom:12px;"></div>
+        <!-- character + question -->
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:18px;">
+          <span id="tk-popup-char" style="font-size:3.2rem;flex-shrink:0;animation:charBounce 1.5s ease-in-out infinite;"></span>
+          <div id="tk-popup-q" style="font-size:1.15rem;color:#EDE9FE;font-weight:700;line-height:1.6;"></div>
+        </div>
+        <!-- oral instruction -->
+        <div style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.5rem;">🎤</span>
+          <span style="font-size:.9rem;color:#A78BFA;font-family:var(--font-body);font-style:italic;">Responde en voz alta cuando estés listo.</span>
+        </div>
+        <!-- confirm button -->
+        <button onclick="submitStationAnswer()" id="tk-popup-submit"
+          style="width:100%;background:linear-gradient(135deg,#6D28D9,#7C3AED);border:none;border-radius:12px;color:#fff;cursor:pointer;font-family:var(--font-head);font-size:1.1rem;font-weight:700;padding:13px;transition:all .2s;box-shadow:0 4px 18px rgba(109,40,217,.5);"
+          onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">✅ ¡Ya respondí!</button>
+      </div>
+      <!-- tail -->
+      <div style="width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:14px solid #A78BFA;margin:0 auto;margin-top:-1px;"></div>
+    </div>
+
+    <!-- ── SPEECH BUBBLES — one per station, persistent ── -->
+    <div id="tk-motive-1" style="display:none;position:absolute;z-index:25;width:280px;">
+      <div style="background:linear-gradient(135deg,#e6f4ff,#cce8ff);border:3px solid #5BC0F8;border-radius:22px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.6);">
+        <div id="tk-motive-text-1" style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#0D3A5C;line-height:1.5;text-align:center;"></div>
+      </div>
+      <div style="position:absolute;bottom:-18px;left:28px;width:0;height:0;border-left:14px solid transparent;border-right:8px solid transparent;border-top:20px solid #5BC0F8;"></div>
+      <div style="position:absolute;bottom:-13px;left:30px;width:0;height:0;border-left:12px solid transparent;border-right:6px solid transparent;border-top:17px solid #cce8ff;"></div>
+    </div>
+    <div id="tk-motive-2" style="display:none;position:absolute;z-index:25;width:280px;">
+      <div style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:3px solid #FBB040;border-radius:22px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.6);">
+        <div id="tk-motive-text-2" style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#5a2a00;line-height:1.5;text-align:center;"></div>
+      </div>
+      <div style="position:absolute;bottom:-18px;left:28px;width:0;height:0;border-left:14px solid transparent;border-right:8px solid transparent;border-top:20px solid #FBB040;"></div>
+      <div style="position:absolute;bottom:-13px;left:30px;width:0;height:0;border-left:12px solid transparent;border-right:6px solid transparent;border-top:17px solid #ffe0b2;"></div>
+    </div>
+    <div id="tk-motive-3" style="display:none;position:absolute;z-index:25;width:280px;">
+      <div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:3px solid #4ADE80;border-radius:22px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.6);">
+        <div id="tk-motive-text-3" style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:#0A3A1A;line-height:1.5;text-align:center;"></div>
+      </div>
+      <div style="position:absolute;bottom:-18px;left:28px;width:0;height:0;border-left:14px solid transparent;border-right:8px solid transparent;border-top:20px solid #4ADE80;"></div>
+      <div style="position:absolute;bottom:-13px;left:30px;width:0;height:0;border-left:12px solid transparent;border-right:6px solid transparent;border-top:17px solid #c8e6c9;"></div>
+    </div>
+
+    <!-- ── SUCCESS MESSAGE ── -->
+    <div id="tk-success" style="display:none;position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:20;background:linear-gradient(135deg,#051a05,#0a2e15);border:2px solid #4ADE80;border-radius:16px;padding:18px 40px;text-align:center;animation:cardPop .5s ease forwards;white-space:nowrap;">
+      <div style="font-size:2.2rem;margin-bottom:4px;">🎉</div>
+      <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:#4ADE80;">¡Recorrido completado! ¡Eres increíble!</div>
+    </div>
+
+  </div><!-- /scene -->
+</div><!-- /ticket-overlay -->
+
+
 <!-- ░░ PIN MODAL ░░ -->
 <div id="pin-overlay">
   <div id="pin-box">
@@ -1115,6 +2007,8 @@ body::before {
 <!-- ░░ NOTIFICATION ░░ -->
 <div id="notif"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 
 // ── TABS ──────────────────────────────────────────────────────────
@@ -1221,6 +2115,60 @@ function checkItem(cb){
 
 // ── REPORT DESIGNER ───────────────────────────────────────────────
 let rowCount = 0;
+let currentTemplate = 'ventas';
+
+// Template configurations
+const reportTemplates = {
+  ventas: {
+    titulo: 'Reporte de Ventas',
+    col1: 'Producto', col2: 'Cantidad', col3: 'Monto (RD$)',
+    col3type: 'number',
+    rows: [['','',['']], ['','',['']], ['','',['']]]
+  },
+  asistencia: {
+    titulo: 'Reporte de Asistencia',
+    col1: 'Nombre del Empleado', col2: 'Días Presentes', col3: 'Días Ausentes',
+    col3type: 'number',
+    rows: [['','',['']], ['','',['']], ['','',['']]]
+  },
+  inventario: {
+    titulo: 'Reporte de Inventario',
+    col1: 'Nombre del Producto', col2: 'Cantidad en Stock', col3: 'Precio Unitario (RD$)',
+    col3type: 'number',
+    rows: [['','',['']], ['','',['']], ['','',['']]]
+  }
+};
+
+function selectTemplate(tpl, btn) {
+  currentTemplate = tpl;
+  document.querySelectorAll('.tpl-btn').forEach(b => b.style.opacity = '.5');
+  btn.style.opacity = '1';
+  btn.style.transform = 'scale(1.04)';
+  setTimeout(() => btn.style.transform = '', 200);
+
+  const cfg = reportTemplates[tpl];
+  document.getElementById('rp-col1').value = cfg.col1;
+  document.getElementById('rp-col2').value = cfg.col2;
+  document.getElementById('rp-col3').value = cfg.col3;
+  document.getElementById('rp-titulo').placeholder = 'Ej: ' + cfg.titulo + ' — Enero 2025';
+  document.getElementById('rp-rows').innerHTML = '';
+  rowCount = 0;
+  addRow(); addRow(); addRow(); addRow(); addRow(); addRow(); addRow(); addRow();
+  updatePreview();
+
+  // Per-template full enunciado
+  const hints = {
+    ventas:     'Piensa en una empresa o negocio de tu comunidad — puede ser un colmado, una farmacia, una tienda de ropa, una escuela o cualquier negocio que conozcas y genera un <strong style="color:var(--gold2);">Reporte de Ventas</strong>. Ingresa <strong style="color:#fff;">8 registros</strong> en el detalle.<br><br><span style="color:#aaa;">🛒 Ejemplo: Si elegiste un colmado, el título podría ser "Reporte de Ventas — Colmado Don Ramón" y en el detalle puedes poner productos como Arroz, Aceite, Leche con sus cantidades y precios de venta.</span>',
+    asistencia: 'Piensa en una empresa o negocio de tu comunidad — puede ser un colmado, una farmacia, una tienda de ropa, una escuela o cualquier negocio que conozcas y genera un <strong style="color:var(--gold2);">Reporte de Asistencia</strong>. Ingresa <strong style="color:#fff;">8 registros</strong> en el detalle.<br><br><span style="color:#aaa;">📋 Ejemplo: Si elegiste una empresa de servicios, el título podría ser "Reporte de Asistencia — Empresa Servicios XYZ" y en el detalle pon los nombres de empleados ficticios con sus días presentes y ausentes en el mes.</span>',
+    inventario: 'Piensa en una empresa o negocio de tu comunidad — puede ser un colmado, una farmacia, una tienda de ropa, una escuela o cualquier negocio que conozcas y genera un <strong style="color:var(--gold2);">Reporte de Inventario</strong>. Ingresa <strong style="color:#fff;">8 registros</strong> en el detalle.<br><br><span style="color:#aaa;">📦 Ejemplo: Si elegiste una tienda de ropa, el título podría ser "Reporte de Inventario — Boutique La Moda" y en el detalle lista productos como Camisas, Pantalones, Zapatos con stock disponible y precio unitario.</span>',
+  };
+  const hintEl = document.getElementById('rp-tpl-hint');
+  document.getElementById('rp-tpl-hint-text').innerHTML = hints[tpl];
+  hintEl.style.display = 'block';
+  hintEl.style.borderColor = tpl === 'ventas' ? '#5BC0F8' : tpl === 'asistencia' ? '#FBB040' : '#C084FC';
+
+  showNotif('📊 Plantilla "' + cfg.titulo + '" cargada');
+}
 
 function addRow(desc='', cant='', monto='') {
   rowCount++;
@@ -1229,7 +2177,7 @@ function addRow(desc='', cant='', monto='') {
   div.id = id;
   div.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:6px;';
   div.innerHTML = `
-    <input type="text" value="${desc}" placeholder="Descripción" oninput="updatePreview()"
+    <input type="text" value="${desc}" placeholder="Dato..." oninput="updatePreview()"
       style="padding:7px;background:var(--dark3);border:1px solid #333;border-radius:5px;color:#fff;font-size:.9rem;font-family:var(--font-body);outline:none;" onfocus="this.style.borderColor='#1A6B2F'" onblur="this.style.borderColor='#333'">
     <input type="number" value="${cant}" placeholder="0" oninput="updatePreview()"
       style="padding:7px;background:var(--dark3);border:1px solid #333;border-radius:5px;color:#fff;font-size:.9rem;font-family:var(--font-body);outline:none;text-align:center;" onfocus="this.style.borderColor='#1A6B2F'" onblur="this.style.borderColor='#333'">
@@ -1247,34 +2195,31 @@ function removeRow(id) {
 }
 
 function updatePreview() {
-  // Header
-  const empresa = document.getElementById('rp-empresa').value || 'EMPRESA / INSTITUCIÓN';
-  const titulo  = document.getElementById('rp-titulo').value  || 'TÍTULO DEL REPORTE';
-  const fecha   = document.getElementById('rp-fecha').value;
-  const periodo = document.getElementById('rp-periodo').value || '--';
-  const nota    = document.getElementById('rp-nota').value    || 'Nota: --';
-  const autor   = document.getElementById('rp-autor').value   || '___________________';
-  const aprobado= document.getElementById('rp-aprobado').value|| '___________________';
+  const empresa  = document.getElementById('rp-empresa').value  || 'EMPRESA / INSTITUCIÓN';
+  const titulo   = document.getElementById('rp-titulo').value   || 'TÍTULO DEL REPORTE';
+  const fecha    = document.getElementById('rp-fecha').value;
+  const periodo  = document.getElementById('rp-periodo').value  || '--';
+  const nota     = document.getElementById('rp-nota').value     || '--';
+  const autor    = document.getElementById('rp-autor').value    || '___________________';
+  const aprobado = document.getElementById('rp-aprobado').value || '___________________';
 
-  document.getElementById('prev-empresa').textContent = empresa.toUpperCase();
-  document.getElementById('prev-titulo').textContent  = titulo;
-  document.getElementById('prev-fecha').textContent   = fecha ? new Date(fecha+'T12:00').toLocaleDateString('es-DO') : '--/--/----';
-  document.getElementById('prev-periodo').textContent = periodo;
-  document.getElementById('prev-nota').textContent    = 'Nota: ' + (document.getElementById('rp-nota').value || '--');
-  document.getElementById('prev-autor').textContent   = autor;
-  document.getElementById('prev-aprobado').textContent= aprobado;
+  document.getElementById('prev-empresa').textContent  = empresa.toUpperCase();
+  document.getElementById('prev-titulo').textContent   = titulo;
+  document.getElementById('prev-fecha').textContent    = fecha ? new Date(fecha+'T12:00').toLocaleDateString('es-DO') : '--/--/----';
+  document.getElementById('prev-periodo').textContent  = periodo;
+  document.getElementById('prev-nota').textContent     = 'Nota: ' + nota;
+  document.getElementById('prev-autor').textContent    = autor;
+  document.getElementById('prev-aprobado').textContent = aprobado;
 
-  // Column headers
-  document.getElementById('prev-th1').textContent = document.getElementById('rp-col1').value || 'Descripción';
-  document.getElementById('prev-th2').textContent = document.getElementById('rp-col2').value || 'Cantidad';
-  document.getElementById('prev-th3').textContent = document.getElementById('rp-col3').value || 'Monto';
+  document.getElementById('prev-th1').textContent = document.getElementById('rp-col1').value || 'Columna 1';
+  document.getElementById('prev-th2').textContent = document.getElementById('rp-col2').value || 'Columna 2';
+  document.getElementById('prev-th3').textContent = document.getElementById('rp-col3').value || 'Columna 3';
 
-  // Rows
   const tbody = document.getElementById('prev-tbody');
-  const rows = document.getElementById('rp-rows').children;
+  const rows  = document.getElementById('rp-rows').children;
   let total = 0;
   if (rows.length === 0) {
-    tbody.innerHTML = '<tr style="background:#f9f9f9;"><td colspan="3" style="padding:10px;text-align:center;color:#aaa;border:1px solid #eee;">Agrega filas de datos en el formulario</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" style="padding:10px;text-align:center;color:#aaa;border:1px solid #eee;">Agrega filas de datos</td></tr>';
   } else {
     tbody.innerHTML = '';
     Array.from(rows).forEach((row, i) => {
@@ -1284,14 +2229,17 @@ function updatePreview() {
       const m = parseFloat(inputs[2].value) || 0;
       total += m;
       const bg = i % 2 === 0 ? '#f9f9f9' : '#fff';
+      const col3Display = currentTemplate === 'asistencia' ? m.toFixed(0) : 'RD$ ' + m.toFixed(2);
       tbody.innerHTML += `<tr style="background:${bg};">
         <td style="padding:5px 8px;border:1px solid #eee;">${d}</td>
         <td style="padding:5px 8px;border:1px solid #eee;text-align:center;">${c}</td>
-        <td style="padding:5px 8px;border:1px solid #eee;text-align:right;">RD$ ${m.toFixed(2)}</td>
+        <td style="padding:5px 8px;border:1px solid #eee;text-align:right;">${col3Display}</td>
       </tr>`;
     });
   }
-  document.getElementById('prev-total').textContent = 'RD$ ' + total.toFixed(2);
+  // For asistencia, col3 is plain number (días ausentes), not currency
+  const isCurrency = currentTemplate !== 'asistencia';
+  document.getElementById('prev-total').textContent = isCurrency ? 'RD$ ' + total.toFixed(2) : total.toFixed(0) + ' días';
 }
 
 function setReportMode(mode, btn) {
@@ -1304,97 +2252,954 @@ function setReportMode(mode, btn) {
   btn.style.borderColor = '#4ADE80';
   btn.style.color = '#fff';
 
+  const tplBar = document.getElementById('rp-template-bar');
+
   if (mode === 'demo') {
+    tplBar.style.display = 'none';
+    const hint = document.getElementById('rp-tpl-hint');
+    if (hint) hint.style.display = 'none';
     clearReport();
-    // Load demo data
-    document.getElementById('rp-empresa').value = 'TechReport Solutions S.A.';
-    document.getElementById('rp-titulo').value  = 'Reporte de Ventas — Enero 2025';
-    document.getElementById('rp-fecha').value   = '2025-01-31';
-    document.getElementById('rp-periodo').value = 'Enero 2025';
-    document.getElementById('rp-nota').value    = 'Reporte generado para uso interno. Validado por el Dpto. de Finanzas.';
-    document.getElementById('rp-autor').value   = 'Ing. Juana Alt. Paulino';
-    document.getElementById('rp-aprobado').value= 'Dirección Académica';
-    addRow('Licencias de software', '15', '45000');
-    addRow('Capacitación técnica',  '8',  '32000');
-    addRow('Soporte y mantenimiento','12','28500');
+    // Set column headers only — docente fills data live
+    document.getElementById('rp-col1').value = 'Descripción';
+    document.getElementById('rp-col2').value = 'Cantidad';
+    document.getElementById('rp-col3').value = 'Monto (RD$)';
+    for (let i=0; i<3; i++) addRow();
+    // Hide analysis section in demo mode
+    const analisisBlock = document.getElementById('rp-analisis-block');
+    if (analisisBlock) analisisBlock.style.display = 'none';
     updatePreview();
-    showNotif('📺 Modo Demostración cargado');
+    showNotif('📺 Modo Demostración — completa los campos en vivo');
   } else {
+    tplBar.style.display = 'block';
     clearReport();
-    showNotif('🧑‍💻 Modo Estudiante listo — completa el formulario');
+    // Show analysis section in student mode
+    const analisisBlock = document.getElementById('rp-analisis-block');
+    if (analisisBlock) analisisBlock.style.display = 'block';
+    document.querySelectorAll('.tpl-btn').forEach(b => b.style.opacity = '.6');
+    showNotif('🧑‍💻 Modo Estudiante — selecciona un tipo de reporte');
   }
 }
 
 function clearReport() {
-  document.getElementById('rp-empresa').value  = '';
-  document.getElementById('rp-titulo').value   = '';
-  document.getElementById('rp-fecha').value    = '';
-  document.getElementById('rp-periodo').value  = '';
-  document.getElementById('rp-nota').value     = '';
-  document.getElementById('rp-autor').value    = '';
-  document.getElementById('rp-aprobado').value = '';
-  document.getElementById('rp-analisis').value = '';
+  ['rp-empresa','rp-titulo','rp-fecha','rp-periodo','rp-nota','rp-autor','rp-aprobado','rp-analisis'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
   document.getElementById('rp-rows').innerHTML = '';
   rowCount = 0;
+  const ab = document.getElementById('rp-analisis-block');
+  if (ab) ab.style.display = 'block';
   updatePreview();
 }
 
-function printReport() {
-  const preview = document.getElementById('report-preview');
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <title>Reporte</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 20px; }
-      table { width:100%; border-collapse:collapse; }
-      th, td { border:1px solid #ccc; padding:6px 10px; font-size:11px; }
-      @media print { body { margin: 0; } }
-    </style>
-    </head><body>${preview.outerHTML}</body></html>`);
-  win.document.close();
-  setTimeout(()=>win.print(), 500);
+function generatePDF() {
+  const btn = document.querySelector('button[onclick="generatePDF()"]');
+  if (btn) { btn.innerHTML = '⏳ Generando...'; btn.disabled = true; }
+
+  const empresa  = document.getElementById('rp-empresa').value  || 'Empresa';
+  const titulo   = document.getElementById('rp-titulo').value   || 'Reporte';
+  const fecha    = document.getElementById('rp-fecha').value;
+  const periodo  = document.getElementById('rp-periodo').value  || '---';
+  const nota     = document.getElementById('rp-nota').value     || '---';
+  const autor    = document.getElementById('rp-autor').value    || '';
+  const aprobado = document.getElementById('rp-aprobado').value || '';
+  const analisis = document.getElementById('rp-analisis').value || '';
+  const col1     = document.getElementById('rp-col1').value || 'Columna 1';
+  const col2     = document.getElementById('rp-col2').value || 'Columna 2';
+  const col3     = document.getElementById('rp-col3').value || 'Columna 3';
+  const fechaFmt = fecha ? new Date(fecha+'T12:00').toLocaleDateString('es-DO') : '---';
+
+  const rowEls = document.getElementById('rp-rows').children;
+  let rowsHTML = '';
+  let total = 0;
+  Array.from(rowEls).forEach((row, i) => {
+    const inputs = row.querySelectorAll('input');
+    const d = inputs[0].value || '';
+    const c = inputs[1].value || '';
+    const m = parseFloat(inputs[2].value) || 0;
+    if (d || c || m) {
+      total += m;
+      const bg = i % 2 === 0 ? '#f5f5f5' : '#ffffff';
+      const col3Val = currentTemplate === 'asistencia' ? m.toFixed(0) : 'RD$ ' + m.toFixed(2);
+      rowsHTML += `<tr style="background:${bg};">
+        <td style="padding:7px 10px;border:1px solid #ccc;">${d}</td>
+        <td style="padding:7px 10px;border:1px solid #ccc;text-align:center;">${c}</td>
+        <td style="padding:7px 10px;border:1px solid #ccc;text-align:right;">${col3Val}</td>
+      </tr>`;
+    }
+  });
+  if (!rowsHTML) rowsHTML = `<tr><td colspan="3" style="padding:10px;text-align:center;color:#aaa;border:1px solid #ccc;font-style:italic;">Sin datos</td></tr>`;
+
+  const analisisBlock = analisis ? `
+    <div style="margin-top:24px;padding:16px 18px;background:#eef2ff;border:2px solid #1a3a6b;border-radius:6px;">
+      <div style="font-size:12px;font-weight:700;color:#1a3a6b;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid #1a3a6b;text-transform:uppercase;letter-spacing:.5px;">Análisis del Reporte — Descripción de cada sección</div>
+      <div style="font-size:11px;color:#333;line-height:1.85;white-space:pre-wrap;">${analisis.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    </div>` : '';
+
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;padding:48px 56px;background:#fff;font-family:Arial,sans-serif;font-size:12px;color:#111;';
+  container.innerHTML = `
+    <div style="background:#1a3a6b;color:#fff;padding:18px 22px;border-radius:6px 6px 0 0;">
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.75;margin-bottom:4px;">${empresa.toUpperCase()}</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:5px;">${titulo}</div>
+      <div style="font-size:10px;opacity:.85;">Fecha: ${fechaFmt} &nbsp;&nbsp; Período: ${periodo}</div>
+    </div>
+    <div style="display:flex;background:#e8f0fb;border-bottom:2px solid #1a3a6b;">
+      <span style="padding:4px 14px;font-size:9px;font-weight:700;color:#1a3a6b;border-right:1px solid #ccc;">ENCABEZADO</span>
+      <span style="padding:4px 14px;font-size:9px;font-weight:700;color:#1a6b2f;border-right:1px solid #ccc;">DETALLE</span>
+      <span style="padding:4px 14px;font-size:9px;font-weight:700;color:#7a3a00;">PIE</span>
+    </div>
+    <div style="padding:14px 0 8px 0;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#1a3a6b;color:#fff;">
+            <th style="padding:8px 10px;text-align:left;border:1px solid #aac;">${col1}</th>
+            <th style="padding:8px 10px;text-align:center;border:1px solid #aac;">${col2}</th>
+            <th style="padding:8px 10px;text-align:right;border:1px solid #aac;">${col3}</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHTML}</tbody>
+        <tfoot>
+          <tr style="background:#e8f0fb;font-weight:700;">
+            <td colspan="2" style="padding:7px 10px;border:1px solid #ccc;">TOTAL</td>
+            <td style="padding:7px 10px;text-align:right;border:1px solid #ccc;">RD$ ${total.toFixed(2)}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div style="background:#fff8e1;border-top:2px solid #7a3a00;padding:14px 0 16px 0;margin-top:8px;">
+      <div style="font-size:11px;color:#555;font-style:italic;margin-bottom:16px;">Nota: ${nota}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-top:8px;">
+        <div style="border-top:1px solid #999;padding-top:5px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;min-height:15px;">${autor}</div>
+          <div style="font-size:9.5px;color:#777;margin-top:3px;">Elaborado por</div>
+        </div>
+        <div style="border-top:1px solid #999;padding-top:5px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;min-height:15px;">${aprobado}</div>
+          <div style="font-size:9.5px;color:#777;margin-top:3px;">Aprobado por</div>
+        </div>
+      </div>
+    </div>
+    ${analisisBlock}
+    <div style="margin-top:22px;border-top:1px solid #ddd;padding-top:7px;text-align:center;font-size:8.5px;color:#aaa;">
+      Politécnico Nuestra Señora de la Altagracia (PNSA) · Análisis y Diseño de Reportes · Act. 6.3.3
+    </div>`;
+
+  document.body.appendChild(container);
+
+  html2canvas(container, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+    width: 794,
+  }).then(canvas => {
+    document.body.removeChild(container);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+    const A4_W = 210, A4_H = 297;
+    const margin = 14;
+    const contentW = A4_W - margin * 2;
+    const imgH = (canvas.height * contentW) / canvas.width;
+
+    let remaining = imgH;
+    let srcY = 0;
+    let firstPage = true;
+
+    while (remaining > 0) {
+      const pageH = A4_H - margin * 2;
+      const sliceH = Math.min(remaining, pageH);
+      const srcSliceH = (sliceH / imgH) * canvas.height;
+
+      const sliceCanvas = document.createElement('canvas');
+      sliceCanvas.width  = canvas.width;
+      sliceCanvas.height = Math.ceil(srcSliceH);
+      const ctx = sliceCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+      ctx.drawImage(canvas, 0, srcY, canvas.width, srcSliceH, 0, 0, canvas.width, srcSliceH);
+
+      if (!firstPage) pdf.addPage();
+      pdf.addImage(sliceCanvas.toDataURL('image/png'), 'PNG', margin, margin, contentW, sliceH);
+
+      remaining -= pageH;
+      srcY += srcSliceH;
+      firstPage = false;
+    }
+
+    // Fix total display in container for asistencia
+    const totalDisplay = currentTemplate === 'asistencia' ? total.toFixed(0) + ' días' : 'RD$ ' + total.toFixed(2);
+    container.innerHTML = container.innerHTML.replace('RD$ ' + total.toFixed(2) + '</td>', totalDisplay + '</td>');
+    const safeName = (titulo || 'reporte').replace(/[^\w\sáéíóúÁÉÍÓÚñÑ]/g,'').trim().replace(/\s+/g,'_');
+    pdf.save('Reporte_' + safeName + '.pdf');
+
+    if (btn) { btn.innerHTML = '📄 Generar PDF'; btn.disabled = false; }
+    showNotif('✅ ¡PDF descargado exitosamente!');
+  }).catch(err => {
+    if (document.body.contains(container)) document.body.removeChild(container);
+    if (btn) { btn.innerHTML = '📄 Generar PDF'; btn.disabled = false; }
+    showNotif('⚠️ Error al generar el PDF. Intenta de nuevo.');
+    console.error(err);
+  });
 }
 
-// Init: add 3 empty rows by default
 document.addEventListener('DOMContentLoaded', () => {
   addRow(); addRow(); addRow();
-  updatePreview();
   document.getElementById('rp-fecha').value = new Date().toISOString().split('T')[0];
   updatePreview();
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('muro-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeMuroModal();
+  });
+});
+
+// ── FLIP CARDS (Saberes Previos) ──────────────────────────────────
+const flipAnswers = { 1: true, 2: false, 3: false, 4: true };
+const flipState   = { 1: null, 2: null, 3: null, 4: null };
+let flipTotal = 0, flipCorrect = 0;
+let flipAudioCtx = null;
+
+function getFlipAudio() {
+  if (!flipAudioCtx) flipAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return flipAudioCtx;
+}
+
+function playFlipSound() {
+  const ctx = getFlipAudio();
+  const osc = ctx.createOscillator(); const g = ctx.createGain();
+  osc.connect(g); g.connect(ctx.destination);
+  osc.type = 'sine'; osc.frequency.setValueAtTime(440, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + .15);
+  g.gain.setValueAtTime(.12, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .2);
+  osc.start(); osc.stop(ctx.currentTime + .2);
+}
+
+function playCorrectSound() {
+  const ctx = getFlipAudio();
+  [523,659,784,1047].forEach((f,i) => {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'triangle'; o.frequency.value = f;
+    const t = ctx.currentTime + i * .1;
+    g.gain.setValueAtTime(.12, t);
+    g.gain.exponentialRampToValueAtTime(.001, t + .18);
+    o.start(t); o.stop(t + .2);
+  });
+}
+
+function playWrongSound() {
+  const ctx = getFlipAudio();
+  [300, 220].forEach((f, i) => {
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sawtooth'; o.frequency.value = f;
+    const t = ctx.currentTime + i * .18;
+    g.gain.setValueAtTime(.1, t);
+    g.gain.exponentialRampToValueAtTime(.001, t + .25);
+    o.start(t); o.stop(t + .28);
+  });
+}
+
+function openMuroModal() {
+  document.getElementById('muro-overlay').style.display = 'flex';
+}
+function closeMuroModal() {
+  document.getElementById('muro-overlay').style.display = 'none';
+}
+
+function flipCard(n) {
+  const inner = document.getElementById('fi-' + n);
+  if (!inner.classList.contains('flipped')) {
+    playFlipSound();
+    inner.classList.add('flipped');
+  }
+}
+
+function answerCard(e, n, answer) {
+  e.stopPropagation();
+  if (flipState[n] !== null) return;
+  flipState[n] = answer;
+  const correct = flipAnswers[n];
+  const isRight = answer === correct;
+  flipTotal++; if (isRight) flipCorrect++;
+  document.getElementById('flip-score').textContent = flipCorrect + ' / ' + flipTotal;
+  const resultEl = document.getElementById('fcr-' + n);
+  resultEl.textContent = isRight ? '✅ ¡Correcto!' : '❌ Era ' + (correct ? 'VERDADERO' : 'FALSO');
+  resultEl.style.color = isRight ? '#4ADE80' : '#FCA5A5';
+  document.getElementById('fc-' + n).querySelectorAll('.fc-true-btn,.fc-false-btn').forEach(b => {
+    b.disabled = true; b.style.opacity = '.4'; b.style.cursor = 'default';
+  });
+  if (isRight) {
+    playCorrectSound();
+    launchFlipConfetti();
+    showFlipReaction(true);
+  } else {
+    playWrongSound();
+    showFlipReaction(false);
+    const card = document.getElementById('fc-' + n);
+    card.style.animation = 'cardShake .5s ease';
+    setTimeout(() => card.style.animation = '', 500);
+  }
+  if (Object.values(flipState).every(v => v !== null)) {
+    setTimeout(() => {
+      const msgs = ['🎉 ¡Increíble! 4/4 — ¡Genio total! 🏆','😊 ¡Muy bien! 3/4 — ¡Casi perfecto!','😅 2/4 — ¡Pero ya aprendiste!','😱 Solo 1/4... ¡ahora viene la explicación!','😭 0/4... ¡No te preocupes, empezamos la clase!'];
+      showFlipReaction(null, msgs[Math.min(4 - flipCorrect, 4)]);
+    }, 1000);
+  }
+}
+
+function launchFlipConfetti() {
+  const cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+  document.body.appendChild(cvs);
+  cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+  const ctx = cvs.getContext('2d');
+  const cols = ['#C00000','#C8A000','#1A6B2F','#1A5E8B','#4A1A7A','#F0C030','#4ADE80','#A78BFA','#FBB040'];
+  const pieces = Array.from({length: 100}, () => ({
+    x: Math.random() * cvs.width, y: -10 - Math.random() * 150,
+    r: 4 + Math.random() * 7, color: cols[Math.floor(Math.random() * cols.length)],
+    tilt: Math.random() * 10 - 5, speed: 2 + Math.random() * 4,
+    opacity: 1, shape: Math.random() > .5 ? 'rect' : 'circle',
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.globalAlpha = p.opacity; ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y); ctx.rotate(p.tilt * Math.PI / 180);
+      if (p.shape === 'rect') ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * .6);
+      else { ctx.beginPath(); ctx.arc(0,0,p.r/2,0,2*Math.PI); ctx.fill(); }
+      ctx.restore();
+      p.y += p.speed; p.tilt += .1;
+      p.x += Math.sin(frame * .05 + p.tilt) * 1.2;
+      if (frame > 70) p.opacity -= .018;
+    });
+    frame++;
+    if (frame < 120) requestAnimationFrame(draw); else cvs.remove();
+  }
+  draw();
+}
+
+function showFlipReaction(isRight, finalMsg) {
+  const area = document.getElementById('flip-reaction');
+  if (finalMsg) {
+    area.innerHTML = `<div style="text-align:center;padding:12px 24px;background:linear-gradient(135deg,var(--dark3),#1a0a2a);border-radius:14px;border:1.5px solid var(--gold);animation:reactionIn .4s ease forwards;display:flex;align-items:center;gap:14px;">
+      <span style="font-size:2.8rem;">🎓</span>
+      <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:var(--gold2);">${finalMsg}</div>
+    </div>`;
+    return;
+  }
+  const data = isRight
+    ? { emoji:'🕺', msg:'¡Correcto! ¡Eres un crack!', sub:'¡Sabías la respuesta! 💪', color:'#4ADE80', bg:'#051a05', border:'#1A6B2F', anim:'charCelebrate .5s ease infinite' }
+    : { emoji:'😭', msg:'¡Uy! Esa estuvo difícil...', sub:'¡Ahora ya lo sabrás siempre! 😉', color:'#FCA5A5', bg:'#1a0505', border:'#6B1A1A', anim:'charShake .5s ease infinite' };
+  area.innerHTML = `<div style="display:flex;align-items:center;gap:16px;padding:12px 24px;background:${data.bg};border:1.5px solid ${data.border};border-radius:14px;animation:reactionIn .4s ease forwards;">
+    <span style="font-size:3.2rem;display:inline-block;animation:${data.anim};">${data.emoji}</span>
+    <div>
+      <div style="font-family:var(--font-head);font-size:1.15rem;font-weight:700;color:${data.color};">${data.msg}</div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:3px;">${data.sub}</div>
+    </div>
+  </div>`;
+}
+
+function resetFlipCards() {
+  Object.keys(flipState).forEach(k => flipState[k] = null);
+  flipTotal = 0; flipCorrect = 0;
+  document.getElementById('flip-score').textContent = '0 / 0';
+  document.getElementById('flip-reaction').innerHTML = '';
+  [1,2,3,4].forEach(n => {
+    document.getElementById('fi-' + n).classList.remove('flipped');
+    const r = document.getElementById('fcr-' + n); if(r) r.textContent='';
+    document.getElementById('fc-' + n).style.animation = '';
+    document.getElementById('fc-' + n).querySelectorAll('.fc-true-btn,.fc-false-btn').forEach(b => {
+      b.disabled=false; b.style.opacity='1'; b.style.cursor='pointer';
+    });
+  });
+  resetBonusCard();
+}
+
+function flipBonusCard() {
+  playFlipSound();
+  document.getElementById('bonus-btn-face').style.display = 'none';
+  const qFace = document.getElementById('bonus-question-face');
+  qFace.style.display = 'block';
+  qFace.style.animation = 'none';
+  qFace.offsetHeight;
+  qFace.style.animation = 'cardPop .5s cubic-bezier(.36,1.8,.6,1) forwards';
+}
+
+function resetBonusCard() {
+  document.getElementById('bonus-btn-face').style.display = 'flex';
+  document.getElementById('bonus-question-face').style.display = 'none';
+}
+
+// charShake keyframe
+if (!document.getElementById('extra-keyframes')) {
+  const style = document.createElement('style');
+  style.id = 'extra-keyframes';
+  style.textContent = `@keyframes charShake {
+    0%,100%{ transform:translateX(0) rotate(0); }
+    25%{ transform:translateX(-6px) rotate(-8deg); }
+    75%{ transform:translateX(6px) rotate(8deg); }
+  }`;
+  document.head.appendChild(style);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('muro-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeMuroModal();
+  });
+});
+
+// ── TICKET PATH (Camino del Aprendizaje) ──────────────────────────
+const tkStations = {
+  1: { char:'🧭', q:'¿Qué diferencia encontraste entre el encabezado, el detalle y el pie de tu reporte?', badge:'📍 INICIO DEL RECORRIDO', bColor:'#1A5E8B', tColor:'#5BC0F8',
+       motiveChar:'🧭', motives:['¡Identificar las partes es el primer paso de un buen analista! 🗺️','¡Esa observación demuestra que ya dominas la estructura! 📋','¡El explorador que describe lo que ve siempre llega lejos! ⭐'] },
+  2: { char:'📚', q:'¿Qué aprendiste hoy que no sabías antes sobre cómo se organiza la información en una empresa?', badge:'⚡ A MITAD DEL CAMINO', bColor:'#7A3A00', tColor:'#FBB040',
+       motiveChar:'🤓', motives:['¡Cada nuevo aprendizaje es un paso hacia tu futuro profesional! 💡','¡La pensadora en ti sigue creciendo! 🎓','¡Reconocer lo aprendido es señal de inteligencia! 🌱'] },
+  3: { char:'🏆', q:'Imagina que trabajas en La Sirena. ¿Para quién sería útil el reporte que generaste hoy y por qué?', badge:'🏁 ¡LA META!', bColor:'#1A6B2F', tColor:'#4ADE80',
+       motiveChar:'🥇', motives:['¡Eso es pensar como un profesional de verdad! 🚀','¡Ya conectas lo que aprendes con el mundo real! 💼','¡La Sirena te contrataría con esa respuesta! 🏆'] },
+};
+let tkCurrent = null;
+let tkCompleted = 0;
+const tkAnswered = {};
+
+function openTicketModal() {
+  document.getElementById('ticket-overlay').style.display = 'flex';
+  document.getElementById('tk-success').style.display = 'none';
+  [1,2,3].forEach(i => { const m=document.getElementById('tk-motive-'+i); if(m) m.style.display='none'; });
+  closePopup();
+  startPathMusic();
+}
+function closeTicketModal() {
+  document.getElementById('ticket-overlay').style.display = 'none';
+  closePopup();
+  stopPathMusic();
+}
+
+function revealStation(n) {
+  if (n === 2 && !tkAnswered[1]) { shakePin(1); return; }
+  if (n === 3 && !tkAnswered[2]) { shakePin(2); return; }
+  tkCurrent = n;
+  const st = tkStations[n];
+  const popup = document.getElementById('tk-popup');
+
+  document.getElementById('tk-popup-badge').textContent = st.badge;
+  document.getElementById('tk-popup-badge').style.background = st.bColor + 'CC';
+  document.getElementById('tk-popup-badge').style.border = '1.5px solid ' + st.tColor;
+  document.getElementById('tk-popup-badge').style.color = st.tColor;
+  document.getElementById('tk-popup-char').textContent = st.char;
+  document.getElementById('tk-popup-q').textContent = st.q;
+
+  // Position above pin
+  const pin = document.getElementById('tk-pin' + n);
+  const scene = pin.offsetParent;
+  const popupW = 400;
+  const left = Math.min(Math.max(pin.offsetLeft - popupW/2 + pin.offsetWidth/2, 10), scene.offsetWidth - popupW - 10);
+  const top  = Math.max(pin.offsetTop - 280, 70);
+  popup.style.left = left + 'px';
+  popup.style.top  = top  + 'px';
+  popup.style.display = 'block';
+  popup.style.animation = 'cardPop .4s cubic-bezier(.36,1.8,.6,1) forwards';
+
+  playFlipSound();
+}
+
+function shakePin(n) {
+  const pin = document.getElementById('tk-pin' + n);
+  pin.style.animation = 'cardShake .5s ease';
+  setTimeout(() => pin.style.animation = '', 600);
+  playWrongSound();
+}
+
+function closePopup() {
+  document.getElementById('tk-popup').style.display = 'none';
+  tkCurrent = null;
+}
+
+function submitStationAnswer() {
+  if (!tkCurrent) return;
+  const n  = tkCurrent;
+  const st = tkStations[n];
+  tkAnswered[n] = true;
+  if (!tkAnswered['_c' + n]) { tkCompleted++; tkAnswered['_c' + n] = true; }
+
+  document.getElementById('tk-progress').textContent = tkCompleted + ' / 3 respondidas';
+
+  // Update pin label
+  const pin = document.getElementById('tk-pin' + n);
+  pin.style.opacity = '1'; pin.style.filter = 'none';
+  document.getElementById('tk-pin' + n + '-label').textContent = '✅ ¡Respondida!';
+  document.getElementById('tk-pin' + n + '-label').style.color = st.tColor;
+  document.getElementById('tk-pin' + n + '-label').style.animation = 'none';
+
+  // Unlock next
+  if (n < 3) {
+    const nextPin = document.getElementById('tk-pin' + (n+1));
+    nextPin.style.opacity = '1'; nextPin.style.filter = 'none';
+    const nextLabel = document.getElementById('tk-pin' + (n+1) + '-label');
+    nextLabel.textContent = '👆 ¡Tu turno!';
+    nextLabel.style.animation = 'hintPulse 1.5s ease-in-out infinite';
+  }
+
+  closePopup();
+  playCorrectSound();
+
+  // Show persistent speech bubble for this station
+  const motive = st.motives[Math.floor(Math.random() * st.motives.length)];
+  const motiveEl = document.getElementById('tk-motive-' + n);
+  document.getElementById('tk-motive-text-' + n).textContent = motive;
+
+  // Position above the character pin, centred
+  const pinEl  = document.getElementById('tk-pin' + n);
+  const scene  = pinEl.offsetParent;
+  const bubbleW = 280;
+  const pinCx  = pinEl.offsetLeft + pinEl.offsetWidth / 2;
+  const ml = Math.min(Math.max(pinCx - bubbleW / 2, 8), scene.offsetWidth - bubbleW - 8);
+  const mt = Math.max(pinEl.offsetTop - 105, 65);
+  motiveEl.style.left = ml + 'px';
+  motiveEl.style.top  = mt + 'px';
+  motiveEl.style.display = 'block';
+  motiveEl.style.opacity = '1';
+  motiveEl.style.transition = '';
+  motiveEl.style.animation = 'none';
+  motiveEl.offsetHeight;
+  motiveEl.style.animation = 'cardPop .5s cubic-bezier(.36,1.8,.6,1) forwards';
+
+  if (n === 3) {
+    // All 3 characters celebrate together!
+    ['tk-char1-svg','tk-char2-svg','tk-char3-svg'].forEach((id, i) => {
+      const svg = document.getElementById(id);
+      if (svg) setTimeout(() => {
+        svg.style.animation = 'charCelebrate .5s ease infinite';
+      }, i * 200);
+    });
+    launchFlipConfetti();
+    setTimeout(() => {
+      document.getElementById('tk-success').style.display = 'block';
+    }, 700);
+  }
+}
+
+function resetTicketPath() {
+  tkCurrent = null; tkCompleted = 0;
+  Object.keys(tkAnswered).forEach(k => delete tkAnswered[k]);
+  document.getElementById('tk-progress').textContent = '0 / 3 respondidas';
+  document.getElementById('tk-success').style.display = 'none';
+  [1,2,3].forEach(i => { const m=document.getElementById('tk-motive-'+i); if(m) m.style.display='none'; });
+  closePopup();
+  [1,2,3].forEach(n => {
+    const pin = document.getElementById('tk-pin' + n);
+    const st  = tkStations[n];
+    pin.style.animation = '';
+    if (n === 1) {
+      pin.style.opacity = '1'; pin.style.filter = 'none';
+      document.getElementById('tk-pin1-label').textContent = '👆 ¡Tócame!';
+      document.getElementById('tk-pin1-label').style.animation = 'hintPulse 2s ease-in-out infinite';
+    } else {
+      pin.style.opacity = '.4'; pin.style.filter = 'grayscale(.8)';
+      document.getElementById('tk-pin' + n + '-label').textContent = '🔒 Bloqueado';
+      document.getElementById('tk-pin' + n + '-label').style.animation = 'none';
+    }
+    document.getElementById('tk-pin' + n + '-label').style.color = st.tColor;
+  });
+  const svg3 = document.getElementById('tk-char3-svg');
+  if (svg3) svg3.style.animation = 'charBounce 2.5s ease-in-out 1.4s infinite';
+  const svg1 = document.getElementById('tk-char1-svg');
+  if (svg1) svg1.style.animation = 'charBounce 2.5s ease-in-out infinite';
+  const svg2 = document.getElementById('tk-char2-svg');
+  if (svg2) svg2.style.animation = 'charBounce 2.5s ease-in-out .7s infinite';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('ticket-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeTicketModal();
+  });
+  document.getElementById('tk-popup')?.addEventListener('click', e => e.stopPropagation());
+  document.getElementById('tk-motive')?.addEventListener('click', e => e.stopPropagation());
+});
+
+// ── CHECKLIST OBJETIVO ───────────────────────────────────────────
+const chkState = { 1:null, 2:null, 3:null, 4:null, 5:null };
+// L=100%, P=50%, N=0%
+const chkValues = { L: 100, P: 50, N: 0 };
+
+function setChkLevel(n, level, btn) {
+  // Clear all buttons for this row
+  const row = btn.closest('tr');
+  row.querySelectorAll('.chk-lvl-btn').forEach(b =>
+    b.classList.remove('sel-L','sel-P','sel-N')
+  );
+  btn.classList.add('sel-' + level);
+  chkState[n] = level;
+  updateChecklist();
+}
+
+function updateChecklist() {
+  const filled = Object.values(chkState).filter(v => v !== null);
+  if (filled.length === 0) {
+    document.getElementById('chk-score').textContent = '— %';
+    document.getElementById('chk-score').style.color = 'var(--gold2)';
+    document.getElementById('chk-msg').textContent = 'Selecciona un nivel en cada indicador';
+    document.getElementById('chk-bar').style.width = '0%';
+    return;
+  }
+
+  const total = Object.values(chkState).reduce((sum, v) => sum + (v ? chkValues[v] : 0), 0);
+  const pct = Math.round(total / 5);
+
+  document.getElementById('chk-score').textContent = pct + '%';
+  document.getElementById('chk-bar').style.width = pct + '%';
+
+  const scoreEl = document.getElementById('chk-score');
+  const bar     = document.getElementById('chk-bar');
+
+  if (pct >= 90)      { scoreEl.style.color='#4ADE80'; bar.style.background='linear-gradient(90deg,#1A6B2F,#4ADE80)'; }
+  else if (pct >= 70) { scoreEl.style.color='var(--gold2)'; bar.style.background='linear-gradient(90deg,#7A3A00,var(--gold))'; }
+  else if (pct >= 50) { scoreEl.style.color='#FBB040'; bar.style.background='linear-gradient(90deg,var(--red2),#FBB040)'; }
+  else                { scoreEl.style.color='#EF4444'; bar.style.background='linear-gradient(90deg,#6B1A1A,var(--red))'; }
+
+  const done = filled.length;
+  const L = filled.filter(v=>v==='L').length;
+  const P = filled.filter(v=>v==='P').length;
+  const N = filled.filter(v=>v==='N').length;
+
+  const msg = done < 5
+    ? `${done}/5 evaluados · sigue completando`
+    : pct === 100 ? '🎉 ¡Objetivo cumplido al 100%! ¡Excelente clase!'
+    : pct >= 80   ? '🌟 ¡Muy buen logro! Casi todo alcanzado'
+    : pct >= 60   ? '👍 Buen avance, hay aspectos a reforzar'
+    : pct >= 40   ? '📚 En construcción — requiere más práctica'
+    :               '⚠️ El objetivo necesita trabajarse más';
+  document.getElementById('chk-msg').textContent = msg;
+}
+
+function resetChecklist() {
+  Object.keys(chkState).forEach(k => chkState[k] = null);
+  document.querySelectorAll('.chk-lvl-btn').forEach(b =>
+    b.classList.remove('sel-L','sel-P','sel-N')
+  );
+  document.getElementById('chk-score').textContent = '— %';
+  document.getElementById('chk-score').style.color = 'var(--gold2)';
+  document.getElementById('chk-msg').textContent = 'Selecciona un nivel en cada indicador';
+  document.getElementById('chk-bar').style.width = '0%';
+  document.getElementById('chk-bar').style.background = 'linear-gradient(90deg,var(--red2),var(--gold))';
+}
+
+// ── MURO BACKGROUND MUSIC ────────────────────────────────────────
+// Vibe: mysterious quiz-game, slightly suspenseful, 115 BPM
+let muroMusicCtx = null;
+let muroMusicNodes = [];
+let muroMusicPlaying = false;
+
+function startMuroMusic() {
+  if (muroMusicPlaying) return;
+  muroMusicPlaying = true;
+  muroMusicCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  // Resume if suspended (browser autoplay policy)
+  if (muroMusicCtx.state === 'suspended') muroMusicCtx.resume();
+
+  const master = muroMusicCtx.createGain();
+  master.gain.setValueAtTime(0, muroMusicCtx.currentTime);
+  master.gain.linearRampToValueAtTime(0.20, muroMusicCtx.currentTime + 1.2);
+  master.connect(muroMusicCtx.destination);
+  muroMusicNodes.push(master);
+
+  const echo = muroMusicCtx.createDelay(0.3);
+  echo.delayTime.value = 0.22;
+  const echoGain = muroMusicCtx.createGain();
+  echoGain.gain.value = 0.14;
+  echo.connect(echoGain);
+  echoGain.connect(echo);
+  echoGain.connect(master);
+  muroMusicNodes.push(echo, echoGain);
+
+  const D4=293.7, F4=349.2, G4=392, A4=440, C5=523.3, E5=659.3,
+        D5=587.3, F5=698.5, G5=784, A5=880,
+        D3=146.8, A3=220, C4=261.6, F3=174.6;
+
+  const B=0.522, E8=0.261, S=0.130;
+
+  const melody = [
+    [D5,E8,0],    [C5,S,E8],    [A4,S,E8+S],
+    [F4,E8,B],    [G4,E8,B+E8], [A4,B*.5,B*2],
+    [C5,S,B*2+B*.5], [D5,S,B*2+B*.5+S],
+    [F5,E8,B*3],  [E5,S,B*3+E8], [D5,S,B*3+E8+S],
+    [C5,B*.75,B*4],
+    [A4,E8,B*5],  [G4,S,B*5+E8],[F4,S,B*5+E8+S],
+    [A4,E8,B*6],  [C5,E8,B*6+E8],[D5,B*.5,B*7],
+    [C5,S,B*7+B*.5],[A4,S,B*7+B*.5+S],[G4,S,B*8],[F4,B*.75,B*8+S],
+    [D5,S,B*9],[F5,S,B*9+S],[A5,S,B*9+S*2],[G5,S,B*9+S*3],
+    [F5,E8,B*10],[D5,E8,B*10+E8],[C5,E8,B*11],
+    [A4,S,B*11+E8],[C5,S,B*11+E8+S],[D5,S,B*11+E8+S*2],[F5,S,B*11+E8+S*3],
+    [A5,E8,B*12],[G5,S,B*12+E8],[F5,S,B*12+E8+S],
+    [D5,E8,B*13],[C5,E8,B*13+E8],[A4,E8,B*14],
+    [G4,S,B*14+E8],[F4,S,B*14+E8+S],[D4,E8,B*14+E8+S*2],
+    [A4,B*.5,B*15],[D5,E8,B*15+B*.5],[F5,E8,B*15+B*.5+E8],
+  ];
+
+  const bass = [
+    [D3,E8,0],[A3,E8,B*.5],[D3,E8,B],[A3,E8,B*1.5],
+    [F3,E8,B*2],[C4,E8,B*2.5],[F3,E8,B*3],[A3,E8,B*3.5],
+    [D3,E8,B*4],[A3,E8,B*4.5],[D3,E8,B*5],[A3,E8,B*5.5],
+    [F3,E8,B*6],[C4,E8,B*6.5],[G4,E8,B*7],[C4,E8,B*7.5],
+    [D3,E8,B*8],[A3,E8,B*8.5],[D3,E8,B*9],[A3,E8,B*9.5],
+    [F3,E8,B*10],[A3,E8,B*10.5],[D3,E8,B*11],[F3,E8,B*11.5],
+    [D3,E8,B*12],[F3,E8,B*12.5],[A3,E8,B*13],[C4,E8,B*13.5],
+    [D3,E8,B*14],[A3,E8,B*14.5],[D3,B*.75,B*15],[A3,E8,B*15+B*.75],
+  ];
+
+  function playMuroClick(time, vol) {
+    if (!muroMusicPlaying || !muroMusicCtx) return;
+    const buf = muroMusicCtx.createBuffer(1, 512, muroMusicCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < 512; i++) d[i] = (Math.random()*2-1) * Math.exp(-i/30);
+    const src = muroMusicCtx.createBufferSource();
+    const g   = muroMusicCtx.createGain();
+    src.buffer = buf; g.gain.value = vol * 0.1;
+    src.connect(g); g.connect(master);
+    src.start(time); src.stop(time + 0.05);
+    muroMusicNodes.push(src, g);
+  }
+
+  function playTamb(time) {
+    if (!muroMusicPlaying || !muroMusicCtx) return;
+    const osc = muroMusicCtx.createOscillator();
+    const g   = muroMusicCtx.createGain();
+    osc.type = 'sine'; osc.frequency.value = 900;
+    g.gain.setValueAtTime(0.06, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 0.06);
+    osc.connect(g); g.connect(master);
+    osc.start(time); osc.stop(time + 0.07);
+    muroMusicNodes.push(osc, g);
+  }
+
+  const LOOP = B * 16.5;
+
+  function scheduleNote(freq, dur, t, vol, type) {
+    if (!muroMusicPlaying || !muroMusicCtx) return;
+    const osc = muroMusicCtx.createOscillator();
+    const g   = muroMusicCtx.createGain();
+    osc.type = type || 'square';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.8);
+    osc.connect(g); g.connect(master); g.connect(echo);
+    osc.start(t); osc.stop(t + dur + 0.04);
+    muroMusicNodes.push(osc, g);
+  }
+
+  function scheduleLoop(loopStart) {
+    if (!muroMusicPlaying) return;
+    melody.forEach(([f,d,t]) => scheduleNote(f, d*0.75, loopStart+t, 0.10, 'square'));
+    bass.forEach(([f,d,t])   => scheduleNote(f, d*0.7,  loopStart+t, 0.09, 'triangle'));
+    for (let i=0; i<32; i++) playMuroClick(loopStart + i*E8, i%2===0?1:.6);
+    for (let i=0; i<16; i++) playTamb(loopStart + i*B);
+    const next = loopStart + LOOP;
+    const ms = (next - muroMusicCtx.currentTime)*1000 - 150;
+    if (ms > 0) setTimeout(() => { if (muroMusicPlaying) scheduleLoop(next); }, ms);
+  }
+
+  scheduleLoop(muroMusicCtx.currentTime + 0.1);
+}
+
+function stopMuroMusic() {
+  muroMusicPlaying = false;
+  if (muroMusicCtx) {
+    const master = muroMusicNodes[0];
+    if (master && master.gain) {
+      try { master.gain.linearRampToValueAtTime(0, muroMusicCtx.currentTime + 0.6); } catch(e){}
+    }
+    setTimeout(() => {
+      muroMusicNodes.forEach(n => { try { n.disconnect(); } catch(e){} });
+      muroMusicNodes = [];
+      try { muroMusicCtx.close(); } catch(e){}
+      muroMusicCtx = null;
+    }, 700);
+  }
+}
+
+// ── PATH BACKGROUND MUSIC ────────────────────────────────────────
+let pathMusicCtx = null;
+let pathMusicNodes = [];
+let pathMusicPlaying = false;
+
+function startPathMusic() {
+  if (pathMusicPlaying) return;
+  pathMusicPlaying = true;
+  pathMusicCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  const master = pathMusicCtx.createGain();
+  master.gain.setValueAtTime(0, pathMusicCtx.currentTime);
+  master.gain.linearRampToValueAtTime(0.22, pathMusicCtx.currentTime + 1.0);
+  master.connect(pathMusicCtx.destination);
+  pathMusicNodes.push(master);
+
+  // Light echo/delay for brightness
+  const echo = pathMusicCtx.createDelay(0.25);
+  echo.delayTime.value = 0.18;
+  const echoGain = pathMusicCtx.createGain();
+  echoGain.gain.value = 0.16;
+  echo.connect(echoGain);
+  echoGain.connect(echo);
+  echoGain.connect(master);
+  pathMusicNodes.push(echo, echoGain);
+
+  // ── Notes (Hz) ──
+  const C4=261.6, D4=293.7, E4=329.6, F4=349.2, G4=392, A4=440, B4=493.9,
+        C5=523.3, D5=587.3, E5=659.3, F5=698.5, G5=784, A5=880,
+        C3=130.8, G3=196, E3=164.8, A3=220, F3=174.6;
+
+  // BPM = 132 — energetic but comfortable
+  // Beat = 60/132 = 0.455s, 8th note = 0.227s, 16th = 0.114s
+  const B=0.455, E8=0.227, S=0.114;
+
+  // ── MELODY — upbeat, bouncy, adventure jingle ──
+  // Format: [freq, duration, start_time]
+  const melody = [
+    // Phrase 1 — 4 bars, catchy hook
+    [C5,E8,0],    [E5,E8,E8],   [G5,E8,E8*2], [E5,S,E8*3],   [G5,S,E8*3+S],
+    [A5,B*.5,B],  [G5,E8,B+B*.5+E8],[E5,E8,B+B*.5+E8*2],
+    [C5,E8,B*2],  [D5,E8,B*2+E8],[E5,E8,B*2+E8*2],[F5,E8,B*2+E8*3],
+    [G5,B*.75,B*3],[E5,E8,B*3+B*.75],[D5,E8,B*3+B*.75+E8],
+
+    // Phrase 2 — answering phrase
+    [E5,E8,B*4],  [D5,E8,B*4+E8],[C5,E8,B*4+E8*2],[B4,E8,B*4+E8*3],
+    [A4,B*.5,B*5],[C5,E8,B*5+B*.5],[B4,E8,B*5+B*.5+E8],
+    [G4,E8,B*6],  [A4,E8,B*6+E8],[B4,E8,B*6+E8*2],[C5,E8,B*6+E8*3],
+    [D5,B*.5,B*7],[E5,E8,B*7+B*.5],[D5,E8,B*7+B*.5+E8],
+
+    // Phrase 3 — build up, higher energy
+    [G5,S,B*8],[A5,S,B*8+S],[G5,S,B*8+S*2],[E5,S,B*8+S*3],
+    [G5,E8,B*8+S*4],[A5,E8,B*8+S*4+E8],[G5,B*.5,B*9],
+    [E5,S,B*9+B*.5],[F5,S,B*9+B*.5+S],[E5,S,B*9+B*.5+S*2],[D5,S,B*9+B*.5+S*3],
+    [E5,E8,B*10],[D5,E8,B*10+E8],[C5,E8,B*10+E8*2],[B4,E8,B*10+E8*3],
+
+    // Phrase 4 — triumphant landing
+    [C5,E8,B*11],[E5,E8,B*11+E8],[G5,E8,B*11+E8*2],[A5,E8,B*11+E8*3],
+    [G5,B*.5,B*12],[E5,E8,B*12+B*.5],[C5,E8,B*12+B*.5+E8],
+    [D5,E8,B*13],[E5,S,B*13+E8],[D5,S,B*13+E8+S],
+    [C5,E8,B*13+E8+S*2],[B4,E8,B*13+E8+S*2+E8],
+    [C5,B,B*14], // big hold
+  ];
+
+  // ── BASS — driving, rhythmic "oom-pah" ──
+  const bass = [
+    [C3,E8,0],[G3,E8,B*.5],[C3,E8,B],[G3,E8,B*1.5],
+    [A3,E8,B*2],[E3,E8,B*2.5],[A3,E8,B*3],[E3,E8,B*3.5],
+    [F3,E8,B*4],[C3,E8,B*4.5],[F3,E8,B*5],[C3,E8,B*5.5],
+    [G3,E8,B*6],[D4*.5,E8,B*6.5],[G3,E8,B*7],[D4*.5,E8,B*7.5],
+    [C3,E8,B*8],[G3,E8,B*8.5],[C3,E8,B*9],[G3,E8,B*9.5],
+    [A3,E8,B*10],[E3,E8,B*10.5],[A3,E8,B*11],[E3,E8,B*11.5],
+    [F3,E8,B*12],[C3,E8,B*12.5],[F3,E8,B*13],[C3,E8,B*13.5],
+    [C3,B*.75,B*14],[G3,E8,B*14+B*.75],[C3,E8,B*14+B*.75+E8],
+  ];
+
+  // ── RHYTHM — light hi-hat style clicks ──
+  function playClick(time, vol) {
+    if (!pathMusicPlaying || !pathMusicCtx) return;
+    const buf = pathMusicCtx.createBuffer(1, 512, pathMusicCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < 512; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 40);
+    const src = pathMusicCtx.createBufferSource();
+    const g   = pathMusicCtx.createGain();
+    src.buffer = buf;
+    g.gain.value = vol * 0.12;
+    src.connect(g); g.connect(master);
+    src.start(time); src.stop(time + 0.04);
+    pathMusicNodes.push(src, g);
+  }
+
+  const LOOP_DURATION = B * 15.5;
+
+  function scheduleNote(freq, dur, startTime, gainVal, type) {
+    if (!pathMusicPlaying || !pathMusicCtx) return;
+    const osc = pathMusicCtx.createOscillator();
+    const g   = pathMusicCtx.createGain();
+    osc.type = type || 'triangle';
+    osc.frequency.value = freq;
+    const att = 0.02;
+    g.gain.setValueAtTime(0, startTime);
+    g.gain.linearRampToValueAtTime(gainVal, startTime + att);
+    g.gain.exponentialRampToValueAtTime(0.001, startTime + Math.max(dur * 0.85, att + 0.01));
+    osc.connect(g);
+    g.connect(master);
+    g.connect(echo);
+    osc.start(startTime);
+    osc.stop(startTime + dur + 0.05);
+    pathMusicNodes.push(osc, g);
+  }
+
+  function scheduleLoop(loopStart) {
+    if (!pathMusicPlaying) return;
+    melody.forEach(([f, d, t]) => scheduleNote(f, d * 0.82, loopStart + t, 0.13, 'triangle'));
+    bass.forEach(([f, d, t])   => scheduleNote(f, d * 0.7,  loopStart + t, 0.09, 'sine'));
+    // Hi-hat on every 8th note
+    for (let i = 0; i < 30; i++) playClick(loopStart + i * E8, i % 2 === 0 ? 1 : 0.6);
+
+    const nextLoop = loopStart + LOOP_DURATION;
+    const ms = (nextLoop - pathMusicCtx.currentTime) * 1000 - 150;
+    if (ms > 0) setTimeout(() => { if (pathMusicPlaying) scheduleLoop(nextLoop); }, ms);
+  }
+
+  scheduleLoop(pathMusicCtx.currentTime + 0.1);
+}
+
+function stopPathMusic() {
+  pathMusicPlaying = false;
+  if (pathMusicCtx) {
+    const master = pathMusicNodes[0];
+    if (master && master.gain) {
+      try { master.gain.linearRampToValueAtTime(0, pathMusicCtx.currentTime + 0.6); } catch(e){}
+    }
+    setTimeout(() => {
+      pathMusicNodes.forEach(n => { try { n.disconnect(); } catch(e){} });
+      pathMusicNodes = [];
+      try { pathMusicCtx.close(); } catch(e){}
+      pathMusicCtx = null;
+    }, 700);
+  }
+}
+
+
 // ── RULETA DE ESTUDIANTES ─────────────────────────────────────────
 const wheelStudents = [
-  'Adames Acosta Ashly',
-  'Almonte Rosario Jeremy',
-  'Astacio Rodríguez Danyeli',
-  'Aybar Alberth',
-  'Batista Castillo Albani',
-  'Bonifacio Espino Johanlly',
-  'Candelario De León Nashla',
-  'Del Rosario Rodríguez María',
-  'Díaz Oriach Haldo',
-  'Duran Solares Jerameel',
-  'Espinal Gregori Yadiel',
-  'Hernández Castillo Derek',
-  'Núñez Victoriano Rosaly',
-  'Ortiz Rodríguez Ximena',
-  'Otaño Jiménez Eleysi',
-  'Peñaló Nakagawa Ryoji',
-  'Pérez Abreu Matthews',
-  'Victoriano Aidelin',
-  'Victoriano Rodríguez Daively',
-  'Zaiter Rosario Diana',
+  'Adames Acosta Ashly','Almonte Rosario Jeremy','Astacio Rodríguez Danyeli',
+  'Aybar Alberth','Batista Castillo Albani','Bonifacio Espino Johanlly',
+  'Candelario De León Nashla','Del Rosario Rodríguez María','Díaz Oriach Haldo',
+  'Duran Solares Jerameel','Espinal Gregori Yadiel','Hernández Castillo Derek',
+  'Núñez Victoriano Rosaly','Ortiz Rodríguez Ximena','Otaño Jiménez Eleysi',
+  'Peñaló Nakagawa Ryoji','Pérez Abreu Matthews','Victoriano Aidelin',
+  'Victoriano Rodríguez Daively','Zaiter Rosario Diana',
 ];
 
-// Colors cycling through palette
+// Active students shown on the wheel (shrinks as teams are filled)
+let activeWheelStudents = [...wheelStudents];
+
+function refreshActiveStudents() {
+  // Keep only students whose team slot is not yet filled
+  const filledTeams = ['ventas','asistencia','inventario'].filter(t => {
+    const el = document.getElementById('slot-' + t);
+    return el && el.dataset.filled === 'true';
+  });
+  activeWheelStudents = wheelStudents.filter(name => {
+    const team = studentTeamMap[name];
+    // If teams haven't been formed (team=null), keep everyone
+    if (!team) return true;
+    // Remove all members of already-filled teams
+    return !filledTeams.includes(team);
+  });
+}
 const wheelColors = [
   '#C00000','#1A5E8B','#1A6B2F','#7A3A00','#4A1A7A',
   '#6B1A1A','#0E4F6B','#3a1a00','#0A2E15','#2a0050',
   '#8B0000','#124a6e','#0f4520','#5a2a00','#2a0a4a',
   '#3a0000','#1a3a1a','#1a2e3a','#3a1a1a','#1a0a2a',
 ];
-
 let wheelAngle = 0;
 let isSpinning = false;
 let currentWinner = null;
@@ -1404,19 +3209,15 @@ function drawWheel() {
   const canvas = document.getElementById('wheel-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  const r  = cx - 4;
-  const n  = wheelStudents.length;
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  const r = cx - 4;
+  const n = activeWheelStudents.length;
+  if (n === 0) return;
   const arc = (2 * Math.PI) / n;
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  wheelStudents.forEach((name, i) => {
+  activeWheelStudents.forEach((name, i) => {
     const startAngle = wheelAngle + i * arc;
     const endAngle   = startAngle + arc;
-
-    // Slice
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, r, startAngle, endAngle);
@@ -1426,8 +3227,6 @@ function drawWheel() {
     ctx.strokeStyle = 'rgba(255,255,255,.2)';
     ctx.lineWidth = 1;
     ctx.stroke();
-
-    // Text
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(startAngle + arc / 2);
@@ -1436,13 +3235,10 @@ function drawWheel() {
     ctx.font = 'bold 9.5px Arial';
     ctx.shadowColor = 'rgba(0,0,0,.5)';
     ctx.shadowBlur = 3;
-    // Shorten name if too long
     const shortName = name.length > 22 ? name.substring(0, 20) + '…' : name;
     ctx.fillText(shortName, r - 8, 4);
     ctx.restore();
   });
-
-  // Center circle
   ctx.beginPath();
   ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
   ctx.fillStyle = '#0D0D0D';
@@ -1450,8 +3246,6 @@ function drawWheel() {
   ctx.strokeStyle = 'var(--gold)';
   ctx.lineWidth = 2;
   ctx.stroke();
-
-  // Center dot
   ctx.beginPath();
   ctx.arc(cx, cy, 7, 0, 2 * Math.PI);
   ctx.fillStyle = '#C8A000';
@@ -1462,15 +3256,15 @@ function spinWheel() {
   if (isSpinning) return;
   isSpinning = true;
   currentWinner = null;
-
   const btn = document.getElementById('spin-btn');
   btn.disabled = true;
   btn.style.opacity = '.6';
-  document.getElementById('btn-add').style.display = 'none';
+  document.getElementById('btn-add-wrap').style.display = 'none';
   document.getElementById('wheel-name').textContent = '...';
   document.getElementById('wheel-name').style.color = '#555';
+  document.getElementById('wheel-result').style.borderColor = '#333';
+  document.getElementById('wheel-result').style.background = 'var(--dark2)';
 
-  // ── Audio context for sounds ──
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   const audioCtx = new AudioCtx();
 
@@ -1489,7 +3283,7 @@ function spinWheel() {
   function playFanfare() {
     const notes = [523, 659, 784, 1047, 1319];
     notes.forEach((freq, i) => {
-      const osc  = audioCtx.createOscillator();
+      const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.frequency.value = freq;
@@ -1500,9 +3294,8 @@ function spinWheel() {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
       osc.start(t); osc.stop(t + 0.2);
     });
-    // Chord finish
     [523,659,784].forEach(freq => {
-      const osc  = audioCtx.createOscillator();
+      const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.frequency.value = freq;
@@ -1521,7 +3314,7 @@ function spinWheel() {
   const startTime  = performance.now();
   const startAngle = wheelAngle;
   let lastTickAngle = 0;
-  const n = wheelStudents.length;
+  const n = activeWheelStudents.length;
   const tickEvery = (2 * Math.PI) / n;
 
   function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
@@ -1531,45 +3324,46 @@ function spinWheel() {
     const progress = Math.min(elapsed / duration, 1);
     wheelAngle = startAngle + totalAngle * easeOut(progress);
     drawWheel();
-
-    // Tick sound on each segment crossing
     const delta = wheelAngle - startAngle;
     const ticksPassed = Math.floor(delta / tickEvery);
-    if (ticksPassed > lastTickAngle) {
-      lastTickAngle = ticksPassed;
-      playTick();
-    }
-
+    if (ticksPassed > lastTickAngle) { lastTickAngle = ticksPassed; playTick(); }
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Determine winner
-      const arc = (2 * Math.PI) / n;
+      const arc = (2 * Math.PI) / activeWheelStudents.length;
       const normalized = ((wheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
       const pointerAngle = (2 * Math.PI - (normalized % (2 * Math.PI)) + 3 * Math.PI / 2) % (2 * Math.PI);
-      const idx = Math.floor(pointerAngle / arc) % n;
-      currentWinner = wheelStudents[idx];
-
-      // 🎉 Fanfare
+      const idx = Math.floor(pointerAngle / arc) % activeWheelStudents.length;
+      currentWinner = activeWheelStudents[idx];
       playFanfare();
-
-      // 🎊 Confetti
       launchConfetti();
-
-      // Show result with animation
       const nameEl = document.getElementById('wheel-name');
       nameEl.textContent = '🎉 ' + currentWinner;
       nameEl.style.color = '#4ADE80';
       nameEl.style.animation = 'none';
-      nameEl.offsetHeight; // reflow
+      nameEl.offsetHeight;
       nameEl.style.animation = 'winnerPop .5s cubic-bezier(.36,1.8,.6,1) forwards';
       document.getElementById('wheel-result').style.borderColor = '#1A6B2F';
       document.getElementById('wheel-result').style.background = '#051a05';
-
-      if (!selectedStudents.includes(currentWinner)) {
-        document.getElementById('btn-add').style.display = 'block';
+      if (!selectedStudents.includes(currentWinner + '::' + (studentTeamMap[currentWinner] || 'x'))) {
+        const team = studentTeamMap[currentWinner];
+        if (team) {
+          // Team is known — auto-assign after short delay for drama
+          setTimeout(() => assignToSlot(team, true), 600);
+        } else {
+          // Teams not formed yet — show manual buttons
+          const slots = { ventas: 'btn-slot-ventas', asistencia: 'btn-slot-asistencia', inventario: 'btn-slot-inventario' };
+          let anyOpen = false;
+          Object.keys(slots).forEach(key => {
+            const slotEl = document.getElementById('slot-' + key);
+            const filled  = slotEl && slotEl.dataset.filled === 'true';
+            const btn     = document.getElementById(slots[key]);
+            if (btn) { btn.style.opacity = filled ? '.3' : '1'; btn.disabled = filled; }
+            if (!filled) anyOpen = true;
+          });
+          if (anyOpen) document.getElementById('btn-add-wrap').style.display = 'block';
+        }
       }
-
       btn.disabled = false;
       btn.style.opacity = '1';
       isSpinning = false;
@@ -1578,7 +3372,6 @@ function spinWheel() {
   requestAnimationFrame(animate);
 }
 
-// ── CONFETTI ─────────────────────────────────────────────────────
 function launchConfetti() {
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
@@ -1586,7 +3379,6 @@ function launchConfetti() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-
   const colors = ['#C00000','#C8A000','#1A6B2F','#1A5E8B','#4A1A7A','#F0C030','#4ADE80','#5BC0F8','#FBB040','#FCA5A5'];
   const pieces = Array.from({length: 120}, () => ({
     x: Math.random() * canvas.width,
@@ -1594,12 +3386,10 @@ function launchConfetti() {
     r: 5 + Math.random() * 8,
     color: colors[Math.floor(Math.random() * colors.length)],
     tilt: Math.random() * 10 - 5,
-    tiltSpeed: Math.random() * 0.15 + 0.05,
     speed: 2 + Math.random() * 4,
     opacity: 1,
     shape: Math.random() > 0.5 ? 'rect' : 'circle',
   }));
-
   let frame = 0;
   function drawConfetti() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1609,16 +3399,10 @@ function launchConfetti() {
       ctx.fillStyle = p.color;
       ctx.translate(p.x, p.y);
       ctx.rotate(p.tilt * Math.PI / 180);
-      if (p.shape === 'rect') {
-        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 0.6);
-      } else {
-        ctx.beginPath();
-        ctx.arc(0, 0, p.r/2, 0, 2*Math.PI);
-        ctx.fill();
-      }
+      if (p.shape === 'rect') ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 0.6);
+      else { ctx.beginPath(); ctx.arc(0, 0, p.r/2, 0, 2*Math.PI); ctx.fill(); }
       ctx.restore();
-      p.y += p.speed;
-      p.tilt += p.tiltSpeed;
+      p.y += p.speed; p.tilt += .1;
       p.x += Math.sin(frame * 0.05 + p.tilt) * 1.2;
       if (frame > 80) p.opacity -= 0.015;
     });
@@ -1629,47 +3413,175 @@ function launchConfetti() {
   drawConfetti();
 }
 
-function addSelected() {
-  if (!currentWinner || selectedStudents.includes(currentWinner)) return;
-  selectedStudents.push(currentWinner);
+function assignToSlot(team, auto) {
+  if (!currentWinner) return;
+  const slotEl = document.getElementById('slot-' + team);
+  if (!slotEl || slotEl.dataset.filled === 'true') return;
 
-  const list = document.getElementById('selected-list');
-  if (selectedStudents.length === 1) list.innerHTML = '';
-  const item = document.createElement('div');
-  item.style.cssText = 'display:flex;align-items:center;gap:8px;background:var(--dark3);border-radius:6px;padding:6px 10px;';
-  item.innerHTML = `<span style="color:#4ADE80;font-size:1rem;">✅</span>
-    <span style="font-size:.9rem;color:#ccc;flex:1;">${currentWinner}</span>
-    <button onclick="removeSelected(this,'${currentWinner}')"
-      style="background:none;border:none;color:#666;cursor:pointer;font-size:.85rem;padding:0 2px;"
-      onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='#666'">✕</button>`;
-  list.appendChild(item);
-  document.getElementById('btn-add').style.display = 'none';
+  selectedStudents.push(currentWinner + '::' + team);
+  slotEl.dataset.filled = 'true';
+
+  const colors  = { ventas: '#5BC0F8', asistencia: '#FBB040', inventario: '#C084FC' };
+  const labels  = { ventas: '🛒 Ventas', asistencia: '📋 Asistencia', inventario: '📦 Inventario' };
+  slotEl.style.fontStyle   = 'normal';
+  slotEl.style.color       = colors[team];
+  slotEl.style.fontWeight  = '700';
+  slotEl.innerHTML = `✅ ${currentWinner}`;
+
+  document.getElementById('btn-add-wrap').style.display = 'none';
+  playCorrectSound();
+
+  // Refresh wheel — remove all members of the newly filled team
+  refreshActiveStudents();
+  drawWheel();
+
+  // Show team badge on result box
+  if (auto) {
+    const nameEl = document.getElementById('wheel-name');
+    nameEl.innerHTML = `${currentWinner}<br><span style="font-size:.85rem;font-weight:400;color:${colors[team]};">${labels[team]}</span>`;
+  }
+
+  // Check if all 3 slots filled
+  const allFilled = ['ventas','asistencia','inventario'].every(t => {
+    const el = document.getElementById('slot-' + t);
+    return el && el.dataset.filled === 'true';
+  });
+  if (allFilled) {
+    launchFlipConfetti();
+    const nameEl = document.getElementById('wheel-name');
+    nameEl.innerHTML = '🎉 ¡Listos para presentar!';
+    nameEl.style.color = '#4ADE80';
+    document.getElementById('wheel-result').style.borderColor = '#1A6B2F';
+    document.getElementById('wheel-result').style.background  = '#051a05';
+  }
 }
 
+function addSelected() {} // kept for compatibility
+
 function removeSelected(btn, name) {
-  const idx = selectedStudents.indexOf(name);
-  if (idx > -1) selectedStudents.splice(idx, 1);
-  btn.closest('div').remove();
-  const list = document.getElementById('selected-list');
-  if (list.children.length === 0) list.innerHTML = '<span style="font-size:.85rem;color:#555;font-style:italic;">Ninguno aún</span>';
+  const idx = selectedStudents.findIndex(s => s.startsWith(name + '::'));
+  if (idx > -1) {
+    const team = selectedStudents[idx].split('::')[1];
+    selectedStudents.splice(idx, 1);
+    const slotEl = document.getElementById('slot-' + team);
+    if (slotEl) {
+      slotEl.dataset.filled = '';
+      slotEl.style.color = '#555';
+      slotEl.style.fontStyle = 'italic';
+      slotEl.style.fontWeight = 'normal';
+      slotEl.textContent = 'Pendiente...';
+    }
+  }
 }
 
 function resetWheel() {
   selectedStudents.length = 0;
   currentWinner = null;
   wheelAngle = 0;
-  document.getElementById('selected-list').innerHTML = '<span style="font-size:.85rem;color:#555;font-style:italic;">Ninguno aún</span>';
+  activeWheelStudents = [...wheelStudents];
+  refreshActiveStudents();
+  // Reset slots
+  ['ventas','asistencia','inventario'].forEach(team => {
+    const el = document.getElementById('slot-' + team);
+    if (el) {
+      el.dataset.filled = '';
+      el.style.color = '#555';
+      el.style.fontStyle = 'italic';
+      el.style.fontWeight = 'normal';
+      el.textContent = 'Pendiente...';
+    }
+  });
   document.getElementById('wheel-name').textContent = 'Gira la ruleta...';
   document.getElementById('wheel-name').style.color = '#555';
   document.getElementById('wheel-result').style.borderColor = '#333';
-  document.getElementById('btn-add').style.display = 'none';
+  document.getElementById('wheel-result').style.background = 'var(--dark2)';
+  document.getElementById('btn-add-wrap').style.display = 'none';
   drawWheel();
 }
 
-// Init wheel on load
-document.addEventListener('DOMContentLoaded', () => {
-  drawWheel();
-});
+document.addEventListener('DOMContentLoaded', () => { drawWheel(); });
+
+// ── GENERADOR DE EQUIPOS ──────────────────────────────────────────
+const teamStudents = [
+  'Adames Acosta Ashly','Almonte Rosario Jeremy','Astacio Rodríguez Danyeli',
+  'Aybar Alberth','Batista Castillo Albani','Bonifacio Espino Johanlly',
+  'Candelario De León Nashla','Del Rosario Rodríguez María','Díaz Oriach Haldo',
+  'Duran Solares Jerameel','Espinal Gregori Yadiel','Hernández Castillo Derek',
+  'Núñez Victoriano Rosaly','Ortiz Rodríguez Ximena','Otaño Jiménez Eleysi',
+  'Peñaló Nakagawa Ryoji','Pérez Abreu Matthews','Victoriano Aidelin',
+  'Victoriano Rodríguez Daively','Zaiter Rosario Diana',
+];
+
+// Shared state: maps each student name → team ('ventas'|'asistencia'|'inventario'|null)
+const studentTeamMap = {};
+teamStudents.forEach(s => studentTeamMap[s] = null);
+
+function generateTeams() {
+  const btn = document.getElementById('team-gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Formando...';
+
+  const shuffled = [...teamStudents];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  const n = shuffled.length;
+  const base = Math.floor(n / 3);
+  const extra = n % 3;
+
+  const team1 = shuffled.slice(0, base + (extra > 0 ? 1 : 0));
+  const team2 = shuffled.slice(team1.length, team1.length + base + (extra > 1 ? 1 : 0));
+  const team3 = shuffled.slice(team1.length + team2.length);
+
+  // Save to shared map
+  team1.forEach(s => studentTeamMap[s] = 'ventas');
+  team2.forEach(s => studentTeamMap[s] = 'asistencia');
+  team3.forEach(s => studentTeamMap[s] = 'inventario');
+
+  const teams = [team1, team2, team3];
+  const colors = ['#5BC0F8', '#FBB040', '#C084FC'];
+
+  teams.forEach((team, i) => {
+    const el = document.getElementById('team-' + (i+1) + '-members');
+    el.innerHTML = '';
+    team.forEach((name, idx) => {
+      const item = document.createElement('div');
+      item.style.cssText = `display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06);animation:cardPop .3s ease ${idx * 0.06}s both;`;
+      item.innerHTML = `<span style="font-family:var(--font-mono);font-size:.72rem;color:${colors[i]};min-width:18px;">${idx+1}.</span>
+        <span style="font-size:.88rem;color:#ccc;">${name}</span>`;
+      el.appendChild(item);
+    });
+    const countEl = document.createElement('div');
+    countEl.style.cssText = `margin-top:8px;font-family:var(--font-mono);font-size:.72rem;color:${colors[i]};text-align:right;`;
+    countEl.textContent = team.length + ' estudiantes';
+    el.appendChild(countEl);
+  });
+
+  document.getElementById('team-results').style.display = 'block';
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '🎲 Volver a formar';
+    playCorrectSound();
+  }, 500);
+
+  launchFlipConfetti();
+  // Also reset wheel slots in case they were filled
+  resetWheel();
+}
+
+function resetTeams() {
+  document.getElementById('team-results').style.display = 'none';
+  document.getElementById('team-gen-btn').innerHTML = '🎲 Formar equipos';
+  document.getElementById('team-gen-btn').disabled = false;
+  ['team-1-members','team-2-members','team-3-members'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+  teamStudents.forEach(s => studentTeamMap[s] = null);
+  resetWheel();
+}
 
 // ── NOTIFICATION ─────────────────────────────────────────────
 let notifTimeout;
