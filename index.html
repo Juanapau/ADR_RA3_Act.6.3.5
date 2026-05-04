@@ -675,7 +675,7 @@ body::before {
       <!-- Demostración docente -->
       <div class="act-card" id="act-2-0">
         <div class="act-card-head">
-          <span class="time-chip">7–20 min</span>
+          <span class="time-chip">7–17 min</span>
           <span class="act-name">🖥️ Observa — La maestra genera un reporte paso a paso</span>
         </div>
         <div class="act-card-body">
@@ -802,8 +802,8 @@ body::before {
           </div>
           <div class="mini-timer" style="margin-top:14px;">
             <span class="mt-label">⏱ TIEMPO</span>
-            <span class="mt-display" id="mt-2-0">13:00</span>
-            <button class="mt-btn green" onclick="startMiniTimer('mt-2-0',780)">▶ Iniciar</button>
+            <span class="mt-display" id="mt-2-0">10:00</span>
+            <button class="mt-btn green" onclick="startMiniTimer('mt-2-0',600)">▶ Iniciar</button>
             <button class="mt-btn" onclick="stopMiniTimer('mt-2-0')">■ Stop</button>
           </div>
         </div>
@@ -875,7 +875,7 @@ body::before {
 
       <div class="act-card" id="act-2-1">
         <div class="act-card-head">
-          <span class="time-chip">20–40 min</span>
+          <span class="time-chip">20–32 min</span>
           <span class="act-name">🧑‍💻 ¡Hazlo tú! — Genera y analiza tu propio reporte</span>
         </div>
         <div class="act-card-body">
@@ -897,8 +897,8 @@ body::before {
           </div>
           <div class="mini-timer" style="margin-top:14px;">
             <span class="mt-label">⏱ TIEMPO</span>
-            <span class="mt-display" id="mt-2-1">20:00</span>
-            <button class="mt-btn green" onclick="startMiniTimer('mt-2-1',1200)">▶ Iniciar</button>
+            <span class="mt-display" id="mt-2-1">12:00</span>
+            <button class="mt-btn green" onclick="startMiniTimer('mt-2-1',720)">▶ Iniciar</button>
             <button class="mt-btn" onclick="stopMiniTimer('mt-2-1')">■ Stop</button>
           </div>
         </div>
@@ -1115,7 +1115,7 @@ body::before {
 
       <div class="act-card" id="act-3-0">
         <div class="act-card-head">
-          <span class="time-chip">40–46 min</span>
+          <span class="time-chip">32–41 min</span>
           <span class="act-name">🎤 Socialización — Presentamos nuestros reportes</span>
         </div>
         <div class="act-card-body">
@@ -1206,8 +1206,8 @@ body::before {
 
           <div class="mini-timer" style="margin-top:14px;">
             <span class="mt-label">⏱ TIEMPO</span>
-            <span class="mt-display" id="mt-3-0">06:00</span>
-            <button class="mt-btn green" onclick="startMiniTimer('mt-3-0',360)">▶ Iniciar</button>
+            <span class="mt-display" id="mt-3-0">09:00</span>
+            <button class="mt-btn green" onclick="startMiniTimer('mt-3-0',540)">▶ Iniciar</button>
             <button class="mt-btn" onclick="stopMiniTimer('mt-3-0')">■ Stop</button>
           </div>
         </div>
@@ -1215,7 +1215,7 @@ body::before {
 
       <div class="act-card" id="act-3-1">
         <div class="act-card-head">
-          <span class="time-chip">46–50 min</span>
+          <span class="time-chip">41–50 min</span>
           <span class="act-name">🧩 ¿Qué aprendiste hoy? — Ticket de salida</span>
         </div>
         <div class="act-card-body">
@@ -2033,23 +2033,88 @@ function toggleCard(id){
 
 // ── MINI TIMERS ───────────────────────────────────────────────────
 const miniTimers={};
+const timerLabels = {
+  'mt-1-1': '¿Qué sabes del tema?',
+  'mt-2-0': 'Demostración — Diseñador',
+  'mt-2-1': '¡Hazlo tú! — Trabajo en equipo',
+  'mt-3-1': 'Ticket de Salida',
+};
+
+function showFloatTimer(id, secs) {
+  const ft = document.getElementById('float-timer');
+  const fd = document.getElementById('float-timer-display');
+  const fl = document.getElementById('float-timer-label');
+  const fc = document.getElementById('float-timer-char');
+  const fm = document.getElementById('float-char-msg');
+  if (!ft) return;
+  const m = Math.floor(secs/60), s = secs%60;
+  fd.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  fl.textContent = timerLabels[id] || '';
+  ft.dataset.timerId = id;
+  // Show character only for Hazlo tú
+  if (fc) fc.style.display = id === 'mt-2-1' ? 'block' : 'none';
+  if (fm && id === 'mt-2-1') {
+    const msgs = ['¡Tú puedes!','¡A trabajar!','¡Sigan adelante!','¡Casi listos!'];
+    fm.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  }
+  ft.style.display = 'block';
+  setTimeout(() => { ft.style.transform = 'scale(1)'; }, 30);
+}
+
+function closeFloatTimer() {
+  const ft = document.getElementById('float-timer');
+  if (!ft) return;
+  ft.style.transform = 'scale(0)';
+  setTimeout(() => { ft.style.display = 'none'; }, 500);
+}
+
 function startMiniTimer(id, secs){
   if(miniTimers[id]) clearInterval(miniTimers[id].iv);
   let remaining = secs;
   updateMiniDisplay(id, remaining);
+  showFloatTimer(id, remaining);
   miniTimers[id] = {
     iv: setInterval(()=>{
       remaining--;
       updateMiniDisplay(id, remaining);
+      // Sync float timer if it's showing this timer
+      const ft = document.getElementById('float-timer');
+      if (ft && ft.dataset.timerId === id && ft.style.display !== 'none') {
+        const fd = document.getElementById('float-timer-display');
+        if (fd) {
+          const m = Math.floor(Math.abs(remaining)/60), s = Math.abs(remaining)%60;
+          fd.textContent = (remaining<0?'-':'') + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+          fd.style.color = remaining <= 60 && remaining > 0 ? '#EF4444' : 'var(--gold2)';
+          ft.style.borderColor = remaining <= 60 && remaining > 0 ? '#EF4444' : 'var(--gold)';
+          // Update character message as time gets low
+          const fm2 = document.getElementById('float-char-msg');
+          if (fm2 && id === 'mt-2-1') {
+            if (remaining <= 120 && remaining > 60)  fm2.textContent = '¡Vayan terminando!';
+            else if (remaining <= 60 && remaining > 0) fm2.textContent = '⚠️ ¡Último minuto!';
+            else if (remaining <= 0) fm2.textContent = '🎉 ¡Tiempo!';
+          }
+          if (remaining <= 60 && remaining > 0 && remaining % 2 === 0) {
+            ft.style.boxShadow = '0 0 24px rgba(239,68,68,.6), 0 8px 40px rgba(0,0,0,.7)';
+          } else if (remaining > 60) {
+            ft.style.boxShadow = '0 8px 40px rgba(0,0,0,.7)';
+          }
+        }
+      }
       if(remaining<=0){
         clearInterval(miniTimers[id].iv);
-        showNotif('⏰ Tiempo agotado: '+id.replace('mt-','Actividad '));
+        showNotif('⏰ ¡Tiempo agotado!');
+        const ft2 = document.getElementById('float-timer');
+        if (ft2) {
+          ft2.style.borderColor = '#EF4444';
+          ft2.style.boxShadow = '0 0 32px rgba(239,68,68,.8)';
+        }
       }
     },1000)
   };
 }
 function stopMiniTimer(id){
   if(miniTimers[id]) clearInterval(miniTimers[id].iv);
+  closeFloatTimer();
 }
 function updateMiniDisplay(id, secs){
   const el=document.getElementById(id);
@@ -2259,16 +2324,25 @@ function setReportMode(mode, btn) {
     const hint = document.getElementById('rp-tpl-hint');
     if (hint) hint.style.display = 'none';
     clearReport();
-    // Set column headers only — docente fills data live
-    document.getElementById('rp-col1').value = 'Descripción';
+    // Pre-fill demo data so docente can explain live without typing
+    document.getElementById('rp-empresa').value  = 'Politécnico Nuestra Señora de la Altagracia';
+    document.getElementById('rp-titulo').value   = 'Reporte de Ventas — Enero 2025';
+    document.getElementById('rp-fecha').value    = '2025-01-31';
+    document.getElementById('rp-periodo').value  = 'Enero 2025';
+    document.getElementById('rp-nota').value     = 'Reporte generado para uso administrativo interno.';
+    document.getElementById('rp-autor').value    = 'Ing. Juana Alt. Paulino';
+    document.getElementById('rp-aprobado').value = 'Dirección Académica';
+    document.getElementById('rp-col1').value = 'Producto';
     document.getElementById('rp-col2').value = 'Cantidad';
     document.getElementById('rp-col3').value = 'Monto (RD$)';
-    for (let i=0; i<3; i++) addRow();
+    addRow('Útiles escolares',  '50', '12500');
+    addRow('Material didáctico','30', '9800');
+    addRow('Libros de texto',   '20', '15000');
     // Hide analysis section in demo mode
     const analisisBlock = document.getElementById('rp-analisis-block');
     if (analisisBlock) analisisBlock.style.display = 'none';
     updatePreview();
-    showNotif('📺 Modo Demostración — completa los campos en vivo');
+    showNotif('📺 Modo Demostración listo');
   } else {
     tplBar.style.display = 'block';
     clearReport();
@@ -3760,5 +3834,64 @@ function resetEval() {
 
 
 </script>
+<!-- ░░ FLOATING TIMER OVERLAY ░░ -->
+<div id="float-timer" style="display:none;position:fixed;bottom:28px;right:28px;z-index:9980;
+  background:rgba(10,10,10,.95);border:2.5px solid var(--gold);border-radius:20px;
+  padding:14px 20px 10px;text-align:center;backdrop-filter:blur(10px);
+  box-shadow:0 8px 40px rgba(0,0,0,.8);cursor:pointer;min-width:200px;
+  transform:scale(0);transition:transform .5s cubic-bezier(.36,1.8,.6,1);"
+  onclick="closeFloatTimer()" title="Clic para cerrar">
+
+  <!-- Character — shown only for Hazlo tú timer -->
+  <div id="float-timer-char" style="display:none;margin-bottom:4px;">
+    <svg id="float-char-svg" viewBox="0 0 80 100" width="64" height="80" xmlns="http://www.w3.org/2000/svg" style="animation:charBounce 1.5s ease-in-out infinite;">
+      <!-- Graduation cap -->
+      <ellipse cx="40" cy="18" rx="22" ry="5" fill="#C8A000"/>
+      <rect x="22" y="8" width="36" height="13" rx="8" fill="#F0C030"/>
+      <rect x="28" y="16" width="24" height="4" rx="2" fill="#C8A000"/>
+      <!-- Tassel -->
+      <line x1="62" y1="10" x2="68" y2="22" stroke="#C8A000" stroke-width="1.5"/>
+      <circle cx="68" cy="24" r="2.5" fill="#C8A000"/>
+      <!-- Head -->
+      <circle cx="40" cy="36" r="16" fill="#FDBCB4"/>
+      <!-- Eyes — star shaped / excited -->
+      <text x="32" y="37" font-size="7" text-anchor="middle">⭐</text>
+      <text x="48" y="37" font-size="7" text-anchor="middle">⭐</text>
+      <!-- Big smile -->
+      <path d="M32 43 Q40 50 48 43" stroke="#C00000" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M33 44 Q40 49 47 44" fill="white" opacity=".7"/>
+      <!-- Blush -->
+      <circle cx="28" cy="41" r="5" fill="#FFB3BA" opacity=".5"/>
+      <circle cx="52" cy="41" r="5" fill="#FFB3BA" opacity=".5"/>
+      <!-- Body — white lab coat style -->
+      <rect x="24" y="52" width="32" height="34" rx="8" fill="#1A5E8B"/>
+      <!-- Collar white -->
+      <path d="M34 52 L40 60 L46 52" fill="#EDE9FE" opacity=".9"/>
+      <!-- Clock icon on body -->
+      <circle cx="40" cy="70" r="8" fill="rgba(255,255,255,.15)" stroke="#5BC0F8" stroke-width="1.5"/>
+      <line x1="40" y1="65" x2="40" y2="70" stroke="#5BC0F8" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="40" y1="70" x2="44" y2="73" stroke="#5BC0F8" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Arms -->
+      <rect x="10" y="54" width="14" height="8" rx="4" fill="#1A5E8B" transform="rotate(20,10,54)"/>
+      <rect x="56" y="54" width="14" height="8" rx="4" fill="#1A5E8B" transform="rotate(-20,56,54)"/>
+      <!-- Hands -->
+      <circle cx="10" cy="66" r="5" fill="#FDBCB4"/>
+      <circle cx="70" cy="66" r="5" fill="#FDBCB4"/>
+      <!-- Legs -->
+      <rect x="28" y="83" width="10" height="14" rx="5" fill="#0D3A5C"/>
+      <rect x="42" y="83" width="10" height="14" rx="5" fill="#0D3A5C"/>
+      <!-- Shoes -->
+      <ellipse cx="33" cy="96" rx="7" ry="4" fill="#1A1A1A"/>
+      <ellipse cx="47" cy="96" rx="7" ry="4" fill="#1A1A1A"/>
+    </svg>
+    <div id="float-char-msg" style="font-family:var(--font-head);font-size:.72rem;color:#A78BFA;margin-top:2px;">¡Tú puedes!</div>
+  </div>
+
+  <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--gold2);letter-spacing:1.5px;margin-bottom:4px;">⏱ TIEMPO RESTANTE</div>
+  <div id="float-timer-display" style="font-family:var(--font-mono);font-size:3.2rem;font-weight:700;color:var(--gold2);line-height:1;letter-spacing:2px;"></div>
+  <div id="float-timer-label" style="font-family:var(--font-head);font-size:.72rem;color:var(--muted);margin-top:5px;"></div>
+  <div style="font-size:.6rem;color:#333;margin-top:6px;">clic para cerrar</div>
+</div>
+
 </body>
 </html>
