@@ -933,19 +933,19 @@ body::before {
             style="background:var(--dark2);border:2px solid #1A5E8B;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
             <div style="font-size:1.6rem;">🛒</div>
             <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#5BC0F8;margin-top:6px;">Reporte de Ventas</div>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">Registra los productos vendidos, sus cantidades y los montos generados. Permite visualizar el desempeño comercial de un negocio en un período determinado.</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Productos · Cantidades · Montos</div>
           </button>
           <button class="tpl-btn" id="tpl-asistencia" onclick="selectTemplate('asistencia',this)"
             style="background:var(--dark2);border:2px solid #7A3A00;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
             <div style="font-size:1.6rem;">📋</div>
             <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#FBB040;margin-top:6px;">Reporte de Asistencia</div>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">Controla la asistencia del personal o estudiantes, indicando días presentes y ausentes. Es clave para la gestión del recurso humano en empresas e instituciones.</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Empleados · Presentes · Ausentes</div>
           </button>
           <button class="tpl-btn" id="tpl-inventario" onclick="selectTemplate('inventario',this)"
             style="background:var(--dark2);border:2px solid #4A1A7A;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;">
             <div style="font-size:1.6rem;">📦</div>
             <div style="font-family:var(--font-head);font-size:.9rem;font-weight:700;color:#C084FC;margin-top:6px;">Reporte de Inventario</div>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">Muestra el stock disponible de productos y su precio unitario. Ayuda a las empresas a conocer su nivel de existencias y tomar decisiones de compra o reabastecimiento.</div>
+            <div style="font-size:.75rem;color:var(--muted);margin-top:3px;">Productos · Stock · Precio unitario</div>
           </button>
         </div>
 
@@ -3408,33 +3408,35 @@ function spinWheel() {
       currentWinner = activeWheelStudents[idx];
       playFanfare();
       launchConfetti();
-      const nameEl = document.getElementById('wheel-name');
-      nameEl.textContent = '🎉 ' + currentWinner;
-      nameEl.style.color = '#4ADE80';
-      nameEl.style.animation = 'none';
-      nameEl.offsetHeight;
-      nameEl.style.animation = 'winnerPop .5s cubic-bezier(.36,1.8,.6,1) forwards';
-      document.getElementById('wheel-result').style.borderColor = '#1A6B2F';
-      document.getElementById('wheel-result').style.background = '#051a05';
-      if (!selectedStudents.includes(currentWinner + '::' + (studentTeamMap[currentWinner] || 'x'))) {
-        const team = studentTeamMap[currentWinner];
-        if (team) {
-          // Team is known — auto-assign after short delay for drama
-          setTimeout(() => assignToSlot(team, true), 600);
-        } else {
-          // Teams not formed yet — show manual buttons
-          const slots = { ventas: 'btn-slot-ventas', asistencia: 'btn-slot-asistencia', inventario: 'btn-slot-inventario' };
-          let anyOpen = false;
-          Object.keys(slots).forEach(key => {
-            const slotEl = document.getElementById('slot-' + key);
-            const filled  = slotEl && slotEl.dataset.filled === 'true';
-            const btn     = document.getElementById(slots[key]);
-            if (btn) { btn.style.opacity = filled ? '.3' : '1'; btn.disabled = filled; }
-            if (!filled) anyOpen = true;
-          });
-          if (anyOpen) document.getElementById('btn-add-wrap').style.display = 'block';
+
+      // Show zoom overlay first, then assign after 2.2s
+      showWinnerZoom(currentWinner, () => {
+        const nameEl = document.getElementById('wheel-name');
+        nameEl.textContent = '🎉 ' + currentWinner;
+        nameEl.style.color = '#4ADE80';
+        nameEl.style.animation = 'none';
+        nameEl.offsetHeight;
+        nameEl.style.animation = 'winnerPop .5s cubic-bezier(.36,1.8,.6,1) forwards';
+        document.getElementById('wheel-result').style.borderColor = '#1A6B2F';
+        document.getElementById('wheel-result').style.background = '#051a05';
+        if (!selectedStudents.includes(currentWinner + '::' + (studentTeamMap[currentWinner] || 'x'))) {
+          const team = studentTeamMap[currentWinner];
+          if (team) {
+            setTimeout(() => assignToSlot(team, true), 400);
+          } else {
+            const slots = { ventas: 'btn-slot-ventas', asistencia: 'btn-slot-asistencia', inventario: 'btn-slot-inventario' };
+            let anyOpen = false;
+            Object.keys(slots).forEach(key => {
+              const slotEl = document.getElementById('slot-' + key);
+              const filled  = slotEl && slotEl.dataset.filled === 'true';
+              const btn     = document.getElementById(slots[key]);
+              if (btn) { btn.style.opacity = filled ? '.3' : '1'; btn.disabled = filled; }
+              if (!filled) anyOpen = true;
+            });
+            if (anyOpen) document.getElementById('btn-add-wrap').style.display = 'block';
+          }
         }
-      }
+      });
       btn.disabled = false;
       btn.style.opacity = '1';
       isSpinning = false;
@@ -3722,6 +3724,59 @@ window.addEventListener('keydown', function(e) {
 window.addEventListener('keyup', function(e) {
   if (e.key === 'PageUp' || e.key === 'PageDown') _stopScroll();
 }, true);
+// ── WINNER ZOOM OVERLAY ─────────────────────────────────────────
+function showWinnerZoom(name, onDone) {
+  const overlay  = document.getElementById('winner-overlay');
+  const nameEl   = document.getElementById('winner-zoom-name');
+  const teamEl   = document.getElementById('winner-zoom-team');
+  const subEl    = document.getElementById('winner-zoom-sub');
+
+  // Set team label color
+  const team = studentTeamMap[name];
+  const teamLabels = { ventas:'🛒 EQUIPO VENTAS', asistencia:'📋 EQUIPO ASISTENCIA', inventario:'📦 EQUIPO INVENTARIO' };
+  const teamColors = { ventas:'#5BC0F8', asistencia:'#FBB040', inventario:'#C084FC' };
+
+  nameEl.textContent = name;
+  nameEl.style.fontSize = name.length > 24 ? '2.8rem' : name.length > 18 ? '3.4rem' : '4rem';
+  teamEl.textContent  = team ? teamLabels[team] : '';
+  teamEl.style.color  = team ? teamColors[team] : '#fff';
+
+  // Show overlay
+  overlay.style.display = 'flex';
+  overlay.style.opacity  = '0';
+  overlay.style.transition = 'opacity .25s';
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
+    setTimeout(() => {
+      // Zoom name in
+      nameEl.style.transform = 'scale(1)';
+      nameEl.style.opacity   = '1';
+      teamEl.style.opacity   = '1';
+      subEl.style.opacity    = '1';
+    }, 60);
+  });
+
+  // After 2.2s — zoom out and dismiss
+  setTimeout(() => {
+    nameEl.style.transition = 'transform .4s ease-in, opacity .4s ease-in';
+    nameEl.style.transform  = 'scale(2)';
+    nameEl.style.opacity    = '0';
+    teamEl.style.opacity    = '0';
+    subEl.style.opacity     = '0';
+    overlay.style.opacity   = '0';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      // Reset for next use
+      nameEl.style.transition = 'transform .5s cubic-bezier(.36,1.8,.6,1), opacity .3s ease';
+      nameEl.style.transform  = 'scale(0)';
+      nameEl.style.opacity    = '0';
+      teamEl.style.opacity    = '0';
+      subEl.style.opacity     = '0';
+      if (onDone) onDone();
+    }, 450);
+  }, 2200);
+}
+
 // ── NOTIFICATION ─────────────────────────────────────────────
 let notifTimeout;
 function showNotif(msg){
@@ -3888,6 +3943,27 @@ function resetEval() {
   <div id="float-timer-display" style="font-family:var(--font-mono);font-size:3.2rem;font-weight:700;color:var(--gold2);line-height:1;letter-spacing:2px;"></div>
   <div id="float-timer-label" style="font-family:var(--font-head);font-size:.72rem;color:var(--muted);margin-top:5px;"></div>
   <div style="font-size:.6rem;color:#333;margin-top:6px;">clic para cerrar</div>
+</div>
+
+<!-- ░░ WINNER ZOOM OVERLAY ░░ -->
+<div id="winner-overlay" style="display:none;position:fixed;inset:0;z-index:9995;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div id="winner-zoom-name" style="
+    font-family:var(--font-head);font-weight:700;text-align:center;
+    color:#4ADE80;line-height:1.2;
+    text-shadow:0 0 40px rgba(74,222,128,.8),0 4px 20px rgba(0,0,0,.8);
+    transform:scale(0);opacity:0;
+    transition:transform .5s cubic-bezier(.36,1.8,.6,1), opacity .3s ease;">
+  </div>
+  <div id="winner-zoom-team" style="
+    font-family:var(--font-mono);font-size:1.1rem;font-weight:700;
+    letter-spacing:3px;opacity:0;transition:opacity .4s ease .3s;">
+  </div>
+  <div style="font-family:var(--font-mono);font-size:.8rem;color:rgba(255,255,255,.35);
+    opacity:0;transition:opacity .4s ease .5s;" id="winner-zoom-sub">
+    ¡Felicidades!
+  </div>
 </div>
 
 </body>
