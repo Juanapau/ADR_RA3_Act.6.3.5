@@ -568,9 +568,143 @@ body::before {
       <button class="ht-btn preset"    onclick="setBigTimer(600)">10'</button>
       <button class="ht-btn preset"    onclick="setBigTimer(1800)">30'</button>
       <button class="ht-btn preset"    onclick="setBigTimer(3000)">50'</button>
+      <button onclick="openNotesWindow()" title="Abrir notas del presentador" style="margin-left:10px;background:rgba(167,139,250,.15);border:1.5px solid #A78BFA;border-radius:8px;color:#A78BFA;cursor:pointer;font-size:.78rem;font-weight:700;padding:6px 14px;transition:all .2s;white-space:nowrap;" onmouseover="this.style.background='rgba(167,139,250,.3)'" onmouseout="this.style.background='rgba(167,139,250,.15)'">🎙 Notas</button>
+      <button id="present-btn" onclick="startPresentation()" title="Proyectar al TV/PDI" style="margin-left:6px;background:rgba(74,222,128,.1);border:1.5px solid #4ADE80;border-radius:8px;color:#4ADE80;cursor:pointer;font-size:.78rem;font-weight:700;padding:6px 14px;transition:all .2s;white-space:nowrap;">📺 Proyectar al TV</button>
     </div>
   </div>
 </header>
+
+<!-- ░░ NOTAS DEL PRESENTADOR — panel fijo derecho bajo pestaña Evaluación ░░ -->
+<div id="notes-panel" style="display:none;position:fixed;right:0;top:148px;bottom:0;z-index:500;
+  width:25vw;min-width:240px;
+  background:rgba(12,8,28,.97);
+  border-left:2px solid #A78BFA;border-top:2px solid #A78BFA;
+  border-radius:12px 0 0 0;
+  box-shadow:-6px 0 32px rgba(167,139,250,.2);
+  flex-direction:column;
+  backdrop-filter:blur(12px);">
+
+  <!-- Panel header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;border-bottom:1px solid rgba(167,139,250,.2);
+    background:rgba(25,16,50,.9);border-radius:12px 0 0 0;flex-shrink:0;">
+    <span style="font-family:'Share Tech Mono',monospace;font-size:.72rem;
+      font-weight:700;color:#A78BFA;letter-spacing:1.5px;">🎙 NOTAS</span>
+    <button onclick="closeNotesPanel()" style="background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#555;
+      cursor:pointer;font-size:.72rem;font-weight:700;padding:3px 9px;transition:all .15s;"
+      onmouseover="this.style.borderColor='#A78BFA';this.style.color='#A78BFA'"
+      onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='#555'">✕</button>
+  </div>
+
+  <!-- Scrollable notes -->
+  <div style="flex:1;overflow-y:auto;padding:12px;
+    scrollbar-width:thin;scrollbar-color:#3D2F6B transparent;">
+
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.58rem;color:#4A3F6B;letter-spacing:2px;margin:0 0 7px 2px;">// INICIO</div>
+
+    <div class="note-card" id="note-1" style="--nc:#A78BFA;--nc-bg:rgba(167,139,250,.1);">
+      <div class="note-card-head"><span class="note-num">1</span><button class="note-close" onclick="markDone(1)">✓ Hecho</button></div>
+      <p>Saludo a la clase y pase de lista.</p>
+    </div>
+    <div class="note-card" id="note-2" style="--nc:#A78BFA;--nc-bg:rgba(167,139,250,.1);">
+      <div class="note-card-head"><span class="note-num">2</span><button class="note-close" onclick="markDone(2)">✓ Hecho</button></div>
+      <p>Dar a conocer el instrumento de evaluación con el que serán evaluados los estudiantes.</p>
+    </div>
+    <div class="note-card" id="note-3" style="--nc:#60A5FA;--nc-bg:rgba(96,165,250,.1);">
+      <div class="note-card-head"><span class="note-num">3</span><button class="note-close" onclick="markDone(3)">✓ Hecho</button></div>
+      <p>Presentación del tema y objetivo. Explicar el proceso que seguirán para alcanzarlo.</p>
+    </div>
+    <div class="note-card" id="note-4" style="--nc:#60A5FA;--nc-bg:rgba(96,165,250,.1);">
+      <div class="note-card-head"><span class="note-num">4</span><button class="note-close" onclick="markDone(4)">✓ Hecho</button></div>
+      <p>Recordar: escucha activa, respeto y valoración del aporte de cada compañero.</p>
+    </div>
+    <div class="note-card" id="note-5" style="--nc:#34D399;--nc-bg:rgba(52,211,153,.1);">
+      <div class="note-card-head"><span class="note-num">5</span><button class="note-close" onclick="markDone(5)">✓ Hecho</button></div>
+      <p>Saberes previos — Muro interactivo: reconocer y valorar públicamente las respuestas acertadas, señalando qué aspecto del tema dominan.</p>
+    </div>
+
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.58rem;color:#4A3F6B;letter-spacing:2px;margin:10px 0 7px 2px;">// DESARROLLO</div>
+
+    <div class="note-card" id="note-6" style="--nc:#FBBF24;--nc-bg:rgba(251,191,36,.1);">
+      <div class="note-card-head"><span class="note-num">6</span><button class="note-close" onclick="markDone(6)">✓ Hecho</button></div>
+      <p>Explicación y demostración de la maestra.</p>
+    </div>
+    <div class="note-card" id="note-7" style="--nc:#FBBF24;--nc-bg:rgba(251,191,36,.1);">
+      <div class="note-card-head"><span class="note-num">7</span><button class="note-close" onclick="markDone(7)">✓ Hecho</button></div>
+      <p>Formación de equipos y explicación del trabajo que desarrollará cada equipo.</p>
+    </div>
+    <div class="note-card" id="note-8" style="--nc:#F97316;--nc-bg:rgba(249,115,22,.1);">
+      <div class="note-card-head"><span class="note-num">8</span><button class="note-close" onclick="markDone(8)">✓ Hecho</button></div>
+      <p>Circular, corregir errores, aclarar dudas y evaluar el trabajo durante el proceso.</p>
+    </div>
+    <div class="note-card" id="note-9" style="--nc:#F97316;--nc-bg:rgba(249,115,22,.1);">
+      <div class="note-card-head"><span class="note-num">9</span><button class="note-close" onclick="markDone(9)">✓ Hecho</button></div>
+      <p>Si detectas dificultad: asignar rol de lector de instrucciones y ofrecer apoyo directo paso a paso.</p>
+    </div>
+
+    <div style="font-family:'Share Tech Mono',monospace;font-size:.58rem;color:#4A3F6B;letter-spacing:2px;margin:10px 0 7px 2px;">// CIERRE</div>
+
+    <div class="note-card" id="note-10" style="--nc:#F472B6;--nc-bg:rgba(244,114,182,.1);">
+      <div class="note-card-head"><span class="note-num">10</span><button class="note-close" onclick="markDone(10)">✓ Hecho</button></div>
+      <p>Socialización: cada equipo construye en conjunto una conclusión que el expositor presentará como voz del grupo.</p>
+    </div>
+    <div class="note-card" id="note-11" style="--nc:#F472B6;--nc-bg:rgba(244,114,182,.1);">
+      <div class="note-card-head"><span class="note-num">11</span><button class="note-close" onclick="markDone(11)">✓ Hecho</button></div>
+      <p>Reflexión sobre lo aprendido por medio de un juego. Retroalimentación de la docente.</p>
+    </div>
+    <div class="note-card" id="note-12" style="--nc:#EC4899;--nc-bg:rgba(236,72,153,.1);">
+      <div class="note-card-head"><span class="note-num">12</span><button class="note-close" onclick="markDone(12)">✓ Hecho</button></div>
+      <p>Verificar si el objetivo de la clase se cumplió al finalizar ésta.</p>
+    </div>
+    <div class="note-card" id="note-13" style="--nc:#EC4899;--nc-bg:rgba(236,72,153,.1);">
+      <div class="note-card-head"><span class="note-num">13</span><button class="note-close" onclick="markDone(13)">✓ Hecho</button></div>
+      <p>Asignación de tarea.</p>
+    </div>
+
+    <div id="notes-all-done" style="display:none;text-align:center;padding:24px 10px;">
+      <div style="font-size:1.8rem;margin-bottom:6px;">🎉</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:#4A3F6B;font-weight:600;">¡Todas completadas!</div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes notesSlideIn {
+  from { transform:translateX(20px); opacity:0; }
+  to   { transform:translateX(0);    opacity:1; }
+}
+.note-card {
+  background:var(--nc-bg);
+  border:1px solid color-mix(in srgb,var(--nc) 30%,transparent);
+  border-left:3px solid var(--nc);
+  border-radius:9px; padding:10px 12px; margin-bottom:8px;
+  overflow:hidden; max-height:180px;
+  transition:opacity .35s,max-height .4s,padding .3s,margin .3s;
+}
+.note-card-head {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;
+}
+.note-num {
+  width:20px; height:20px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Share Tech Mono',monospace; font-size:.68rem; font-weight:700;
+  background:color-mix(in srgb,var(--nc) 20%,transparent);
+  border:1.5px solid var(--nc); color:var(--nc);
+}
+.note-close {
+  background:color-mix(in srgb,var(--nc) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--nc) 35%,transparent);
+  border-radius:5px; color:var(--nc); cursor:pointer;
+  font-size:.62rem; font-weight:700; padding:2px 7px;
+  font-family:'Exo 2',sans-serif; transition:opacity .15s;
+}
+.note-close:hover { opacity:.75; }
+.note-card p {
+  font-family:'Exo 2',sans-serif; font-size:.82rem;
+  color:#C4B8E8; line-height:1.6;
+}
+</style>
 
 <!-- ░░ TABS ░░ -->
 <nav id="tabs">
@@ -3884,6 +4018,119 @@ function resetEval() {
   document.getElementById('ev-breakdown').textContent = 'Selecciona un nivel en cada indicador';
 }
 
+// ── NOTAS DEL PRESENTADOR — Presentation API ─────────────────────
+var _presentationConn = null;
+var _notesPanelOpen   = false;
+
+// ── Receiver HTML (what the TV/PDI sees — clean, no notes) ───────
+var _receiverHTML = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">' +
+  '<style>' +
+  'body{margin:0;background:#07090F;display:flex;align-items:center;justify-content:center;height:100vh;font-family:"Exo 2",sans-serif;}' +
+  '.msg{text-align:center;color:rgba(255,255,255,.15);}' +
+  '.msg div:first-child{font-size:3rem;margin-bottom:12px;}' +
+  '.msg div:last-child{font-size:.9rem;letter-spacing:2px;}' +
+  '</style></head><body>' +
+  '<div class="msg"><div>📊</div><div>PNSA · Act. 6.3.5 · Ing. Juana Alt. Paulino</div></div>' +
+  '<script>' +
+  'if(navigator.presentation&&navigator.presentation.receiver){' +
+    'navigator.presentation.receiver.connectionList.then(function(list){' +
+      'list.connections.forEach(function(c){c.addEventListener("message",function(e){' +
+        'try{var d=JSON.parse(e.data);if(d.type==="navigate")window.location.href=d.url;}catch(ex){}' +
+      '});});' +
+      'list.addEventListener("connectionavailable",function(e){' +
+        'e.connection.addEventListener("message",function(ev){' +
+          'try{var d=JSON.parse(ev.data);if(d.type==="navigate")window.location.href=d.url;}catch(ex){}' +
+        '});' +
+      '});' +
+    '});' +
+  '}' +
+  '<\/script></body></html>';
+
+// ── Start presentation to external screen ────────────────────────
+function startPresentation() {
+  if (!navigator.presentation || !navigator.presentation.request) {
+    alert('Tu navegador no soporta la Presentation API.\n\nUsa Google Chrome con el TV conectado por HDMI.');
+    return;
+  }
+  var blob = new Blob([_receiverHTML], {type:'text/html'});
+  var url  = URL.createObjectURL(blob);
+  var req  = new PresentationRequest([url]);
+
+  req.start().then(function(conn) {
+    _presentationConn = conn;
+    conn.addEventListener('connect', function() {
+      // Send the actual class URL to the receiver
+      setTimeout(function() {
+        try { conn.send(JSON.stringify({type:'navigate', url: window.location.href})); } catch(e){}
+      }, 800);
+    });
+    conn.addEventListener('close',    function() { _presentationConn = null; updatePresentBtn(); });
+    conn.addEventListener('terminate', function() { _presentationConn = null; updatePresentBtn(); });
+    updatePresentBtn();
+  }).catch(function(err) {
+    console.log('Presentation error:', err);
+  });
+}
+
+function stopPresentation() {
+  if (_presentationConn) { _presentationConn.terminate(); _presentationConn = null; }
+  updatePresentBtn();
+}
+
+function updatePresentBtn() {
+  var btn = document.getElementById('present-btn');
+  if (!btn) return;
+  if (_presentationConn) {
+    btn.textContent = '⏹ Detener TV';
+    btn.style.borderColor = '#EF4444';
+    btn.style.color = '#EF4444';
+    btn.style.background = 'rgba(239,68,68,.15)';
+    btn.onclick = stopPresentation;
+  } else {
+    btn.textContent = '📺 Proyectar al TV';
+    btn.style.borderColor = '#4ADE80';
+    btn.style.color = '#4ADE80';
+    btn.style.background = 'rgba(74,222,128,.1)';
+    btn.onclick = startPresentation;
+  }
+}
+
+// ── Notes panel toggle ────────────────────────────────────────────
+function openNotesWindow() {
+  var panel = document.getElementById('notes-panel');
+  if (!panel) return;
+  _notesPanelOpen = !_notesPanelOpen;
+  panel.style.display = _notesPanelOpen ? 'flex' : 'none';
+  if (_notesPanelOpen) {
+    panel.style.animation = 'notesSlideIn .3s cubic-bezier(.4,1.3,.6,1) forwards';
+  }
+}
+
+function closeNotesPanel() {
+  _notesPanelOpen = false;
+  var panel = document.getElementById('notes-panel');
+  if (panel) panel.style.display = 'none';
+}
+
+function markDone(n) {
+  var card = document.getElementById('note-' + n);
+  if (!card) return;
+  card.style.transition = 'opacity .35s, max-height .4s, padding .3s, margin .3s';
+  card.style.opacity = '0';
+  card.style.maxHeight = '0';
+  card.style.padding = '0';
+  card.style.marginBottom = '0';
+  setTimeout(function() {
+    card.style.display = 'none';
+    var rem = document.querySelectorAll('.note-card:not([style*="display: none"])');
+    if (rem.length === 0) {
+      var done = document.getElementById('notes-all-done');
+      if (done) done.style.display = 'block';
+    }
+  }, 420);
+}
+
+</script>
 
 </script>
 <!-- ░░ FLOATING TIMER OVERLAY ░░ -->
